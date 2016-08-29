@@ -1,0 +1,8 @@
+---
+title: Events
+contentful:
+  content_type: event
+  entry_template: page.jade
+  entry_filename_pattern: event/:fields.slug
+  permalink_style: true
+---

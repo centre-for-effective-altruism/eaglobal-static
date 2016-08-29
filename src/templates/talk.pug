@@ -1,0 +1,45 @@
+extends ./page
+
+block header
+
+block content
+		#content
+			include ./components/responsive-embed
+			+embed(embedUrl)
+			header#header
+				h1.page-title#page-title!= typogr.typogrify(title)
+			.row
+				.col-md-9
+					h2.sr-only About this talk
+					h3.sr-only Event
+					- var ev = fileIDMap[event.sys.id]
+						h4.talk-event-title
+							i.fa.fa-globe
+							a(href=ev.canonical)!= ev.title
+					h3.sr-only Speakers
+					ul.talk-speakers
+						each s in speakers
+							- var speaker = fileIDMap[s.sys.id]
+							li.talk-speaker
+								h4.talk-speaker-title
+									i.fa.fa-user
+									!= speaker.title
+								h5.talk-speaker-details
+									if speaker.jobTitle
+										|  
+										span.talk-speaker-job-title!= speaker.jobTitle
+									if speaker.jobTitle && speaker.organization
+										| , 
+									if speaker.organization
+										span.talk-speaker-organization
+											a(href=speaker.organization.fields.website target="_blank")
+												!= speaker.organization.fields.title
+					h3.sr-only About this talk
+					!= contents
+				aside.col-md-3.talk-related
+					h3.talk-related-title Related talks
+					ul
+						each talk in ['Talk 1', 'Talk 2']
+							li!= talk
+
+			block postContent

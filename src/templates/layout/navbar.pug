@@ -1,0 +1,18 @@
+nav#navbar-main.navbar.navbar-primary.navbar-fixed-top
+    .container
+        .navbar-header
+            button.navbar-toggle.collapsed(type='button', data-toggle='collapse', data-target='#navbar-main-collapse')
+                span.sr-only Toggle navigation
+                i.fa.fa-bars
+            include ./navbar-header-brand
+        #navbar-main-collapse.navbar-main-menu.collapse.navbar-collapse
+            ul.nav.navbar-nav
+                if seriesSet['main-navigation'] && seriesSet['main-navigation'].children
+                    each item in seriesSet['main-navigation'].children
+                        case item.type
+                            when 'page'
+                                li.nav(class=(breadcrumb_path && breadcrumb_path[0] && breadcrumb_path[0].path === item.file.path ? 'active' : ''))
+                                    a(href=item.file.canonical, id="navbar-link-"+slug, title=item.file.title)!= item.file.shortTitle || item.file.title
+                            when 'link'
+                                li.nav
+                                    a(href=item.file.url id="navbar-link-"+slug target="_blank")!= item.file.title

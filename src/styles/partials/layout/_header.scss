@@ -1,0 +1,22 @@
+#header {
+	// margin-top:$grid-gutter-width;
+}
+.header-logo {
+	margin-bottom: $grid-gutter-width;
+}
+.page-title {
+	color: $site-dark-gray;
+	padding-bottom: 5px;
+	border-bottom: 2px solid $site-primary;
+}
+.breadcrumb {
+	@media(max-width:$screen-xs-max){
+		display: none;
+	}
+	&>li{
+		&+li:before{
+			content: "\f178";
+			font-family: 'icons'
+		}
+	}
+}

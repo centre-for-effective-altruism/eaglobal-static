@@ -1,0 +1,22 @@
+#content
+{
+	position: relative;
+	z-index: 1005;
+	>.first-paragraph {
+		// @include first-paragraph();
+	}
+	hr {
+		border: none;
+		height: 1px;
+		position: relative;
+		text-align: center;
+		&:before {
+			content: "* * *";
+			position: absolute;
+			top: -0.65em;
+		}
+	}
+	&>a.btn {
+		margin-bottom: 16.5px;
+	}
+}

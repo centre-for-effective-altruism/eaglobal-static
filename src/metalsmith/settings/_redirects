@@ -1,0 +1,11 @@
+/people /community-profiles 301
+/ideas /articles 301
+/ideas/* /articles/:splat 301
+/about-ea	/ideas/introduction-to-effective-altruism/ 301
+/accomplishments	/impact/ 301
+/join	/get-involved/ 301
+/have-an-impact/	/get-involved/ 301
+/faq	/faqs-criticism-objections/ 301
+/faqs	/faqs-criticism-objections/ 301
+/feedback	/contact/ 301
+/frequently-asked-questions	/faqs-criticism-objections/ 301

@@ -1,0 +1,19 @@
+extends ./layout
+
+block header
+	.row
+		.col-md-10.col-md-offset-1
+			include ./layout/header
+
+block content
+	.row
+		#content.col-md-7.col-md-offset-1.col-lg-7
+			.visible-xs.visible-sm
+				include ./components/table-of-contents
+			!= contents
+		#table-of-contents.col-md-4.col-lg-3.visible-md.visible-lg
+			- var tocDepth = ['faqs-criticism-objections'].indexOf(slug) > -1 ? 2 : 1
+			include ./components/table-of-contents
+	.row
+		.col-md-7.col-md-offset-1.col-lg-7
+			block postContent
