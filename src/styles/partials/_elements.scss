@@ -25,19 +25,16 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 figure {
-	margin: $grid-gutter-width/2 0;
-	@media(max-width:$screen-xs-max){
-		overflow-x: scroll;
-	}
+	margin: 0 0 $grid-gutter-width/2;
 	.img-responsive {
 		margin-left: auto;
 	}
 	figcaption {
-		text-align: right;
 		font-weight: $font-weight-normal;
-		font-style: italic;
-		border-bottom: 2px dashed $site-secondary-darker;
-		padding: 5px 0;
+		padding: $grid-gutter-width/2 0 0;
+		h3, h4, p {
+			margin-top: 0;
+		}
 	}
 }
 table {

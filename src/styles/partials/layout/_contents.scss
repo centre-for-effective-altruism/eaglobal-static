@@ -1,5 +1,5 @@
 #content-wrapper {
-	padding-top: $navbar-height + $grid-gutter-width;
+	padding-top: $navbar-height;
 	padding-bottom: $grid-gutter-width;
 	/*@media(min-width:$screen-md){
 		padding-top: 119px + $grid-gutter-width*2;
@@ -13,7 +13,7 @@
 	background-repeat: no-repeat;
 	background-attachment: fixed;
 	@media(min-width: $screen-md){
-		padding-top: $navbar-height-large + $grid-gutter-width;
+		padding-top: $navbar-height-large;
 	}
 	&>div,&>article,&>section,&>header,&>footer,&>nav,&>aside {
 		position: relative;
@@ -28,5 +28,29 @@
 		top: 0;
 		left: 0;
 		background: linear-gradient(to bottom, rgba(255,255,255,0) 0%,rgba(255,255,255,1) 90%);
+	}
+}
+
+#content
+{
+	padding-top: $grid-gutter-width;
+	position: relative;
+	z-index: 1005;
+	>.first-paragraph {
+		// @include first-paragraph();
+	}
+	hr {
+		border: none;
+		height: 1px;
+		position: relative;
+		text-align: center;
+		&:before {
+			content: "* * *";
+			position: absolute;
+			top: -0.65em;
+		}
+	}
+	&>a.btn {
+		margin-bottom: 16.5px;
 	}
 }

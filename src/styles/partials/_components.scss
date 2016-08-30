@@ -1,9 +1,10 @@
+@import 'components/embeds';
+@import 'components/featured-image';
 @import 'components/footnotes';
 @import 'components/heading-permalink';
 @import 'components/media-list';
 @import 'components/newsletter-signup';
 @import 'components/quotation';
-@import 'components/responsive-embed';
 @import 'components/table-of-contents';
 
 .btn {
@@ -75,6 +76,23 @@ span {
 	}
 	&.gpp {
 		color: $gpp !important;
+	}
+}
+
+
+.section-divider {
+	&:before {
+		content: ' ';
+		border-top: 1px solid #CCC;
+		width: 50%;
+		margin: $grid-gutter-width auto;
+		display: block;
+	}
+}
+.section-divider,.section-no-divider {
+	h2 {
+		text-align: center;
+		margin: $grid-gutter-width 0;
 	}
 }
 

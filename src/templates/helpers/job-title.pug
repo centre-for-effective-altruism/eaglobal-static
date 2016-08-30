@@ -1,7 +1,11 @@
-mixin jobTitle(jobTitle, organisations)
-	if jobTitle
-		!= jobTitle
-		if organisations && organisations.length
-			- var organisation = organisations[0]
-			| , 
-			a(href=organisation.fields.website target="_blank")!= organisation.fields.title
+mixin jobTitle(speaker)
+	- speaker = speaker || {}
+	- var title = speaker.jobTitle || jobTitle
+	- var org = speaker.organization || organization
+		span.job-title
+			!= title
+	if title && org
+		| , 
+	if org
+		span.organization
+			a(href=org.fields.website target="_blank")!= typogr.typogrify(org.fields.title)

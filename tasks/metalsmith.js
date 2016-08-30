@@ -85,6 +85,7 @@ var merge = require('merge');
 var typogr = require('typogr');
 var minimatch = require('minimatch');
 var url = require('url');
+var truncate = require('truncate');
 var NotificationCenter = require('node-notifier').NotificationCenter;
 var notifier = new NotificationCenter();
 // utility global var to hold 'site' info from our settings file, for reuse in other plugins
@@ -155,6 +156,7 @@ function build(buildCount){
             extension:'.pug',
             cache: true,
             url,
+            truncate,
             typogr,
             slugify: slug,
             moment,
@@ -263,13 +265,6 @@ function build(buildCount){
                     singular: 'page',
                 }
             },
-            articles: {
-                pattern: 'articles/**/index.html',
-                sortBy: 'menuOrder',
-                metadata: {
-                    singular: 'article',
-                }
-            },
             series: {
                 pattern: 'series/**/index.html',
                 sortBy: 'title',
@@ -277,23 +272,45 @@ function build(buildCount){
                     singular: 'series',
                 }
             },
-            people: {
-                pattern: 'people/**/index.html',
+            speakers: {
+                pattern: 'speakers/**/index.html',
                 sortBy: 'title',
                 metadata: {
-                    singular: 'person',
+                    singular: 'speaker',
                 }
             },
-            'mediaItems': {
-                pattern: 'media-items/**/index.html',
+            'events': {
+                pattern: 'events/**/index.html',
                 sortBy: 'date',
                 reverse: true,
                 metadata: {
-                    singular: 'media-item',
+                    singular: 'event',
+                }
+            },
+            'talks': {
+                pattern: 'talks/**/index.html',
+                sortBy: '',
+                reverse: true,
+                metadata: {
+                    singular: 'talk',
+                }
+            },
+            'galleries': {
+                pattern: 'galleries/*/index.html',
+                sortBy: '',
+                reverse: true,
+                metadata: {
+                    singular: 'gallery',
                 }
             }
         }))
         .use(logMessage('Added files to collections'))
+        // .use(function (files, metalsmith, done) {
+        //     Object.keys(files).filter(minimatch.filter('**/*.html')).forEach(function(file){
+        //         console.log(file);
+        //         console.log(files[file]);
+        //     });
+        // })
         .use(function (files, metalsmith, done) {
             // check all of our HTML files have slugs
             Object.keys(files).filter(minimatch.filter('**/*.html')).forEach(function(file){
@@ -330,6 +347,13 @@ function build(buildCount){
             // move favicons into root directory
             Object.keys(files).filter(minimatch.filter('images/favicons/**')).forEach(function(file){
                 files[path.basename(file)] = files[file];
+                delete files[file];
+            })
+            // move galleries under events
+            Object.keys(files).filter(minimatch.filter('galleries/**')).forEach(function(file){
+                var filePath = 'events/'+files[file].event.fields.slug+'/photos/index.html';
+                files[filePath] = files[file];
+                files[filePath].title = 'Photos';
                 delete files[file];
             })
             done();
@@ -540,6 +564,10 @@ function build(buildCount){
             Object.keys(files).filter(minimatch.filter('**/*.js')).forEach(function(file){
                 jsFiles[file] = files[file].contents.toString();
             });
+            // store `contents` field in `contentsRaw` before we template, so we can use the parsed HTML (without any templating cruft) in other templates
+            Object.keys(files).filter(minimatch.filter('**/*.html')).forEach(function(file){
+                files[file].contentsRaw = files[file].contents
+            });
             done();
         })
         .use(layouts({
@@ -548,6 +576,7 @@ function build(buildCount){
             pretty: process.env.NODE_ENV === 'development' ? true : false,
             cache: true,
             typogr,
+            truncate,
             url,
             moment,
             strip,
@@ -567,7 +596,7 @@ function build(buildCount){
         .use(lazysizes({
             widths: [100,480,768,992,1200,1800],
             qualities: [ 50, 70, 70, 70, 70, 70],
-            backgrounds: ['#content-wrapper'],
+            backgrounds: ['#content-wrapper','.featured-image','.embed-link-thumbnail'],
             ignore: '/images/**',
             ignoreSelectors:'.content-block-content',
             querystring: {

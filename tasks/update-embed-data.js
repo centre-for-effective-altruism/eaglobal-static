@@ -86,7 +86,7 @@ contentful.space(function(space){
 				// add missing oembed data
 				if(!entry.fields.oembed){
 					entry.fields.oembed = {
-						'en-US': oembedData[i]
+						'en-US': oembedData[i].data
 					}
 				}
 			});

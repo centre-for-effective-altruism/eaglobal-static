@@ -121,7 +121,7 @@
     "scrollmagicJQuery": "./node_modules/scrollmagic/scrollmagic/uncompressed/plugins/jquery.ScrollMagic.js",
     "scrollmagicAnimationGSAP": "./node_modules/scrollmagic/scrollmagic/uncompressed/plugins/animation.gsap.js",
     "jquerySlabText": "./src/scripts/bundle/vendor/jquery.slabtext.js",
-    "jqueryThrottleDebounce": "./node_modules/throttle-debounce/index.js",
+    "throttleDebounce": "./node_modules/throttle-debounce/index.js",
     "jqueryPulse": "./src/scripts/bundle/vendor/jquery.pulse.js",
     "chartist": "./node_modules/chartist/dist/chartist.js",
     "chartistAxisTitle": "./node_modules/chartist-plugin-axistitle/dist/chartist-plugin-axistitle.js",

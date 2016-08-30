@@ -1,0 +1,50 @@
+extends ./layout
+
+
+block header
+	header#header
+		include ./components/breadcrumbs
+		h1.page-title#page-title!= typogr.typogrify(title)
+			|  
+			small!= typogr.typogrify(event.fields.title)
+
+block content
+	mixin galleryImage(image)
+		.gallery-item-wrapper.col-sm-6.col-md-3
+			figure.gallery-item
+				.gallery-image-wrapper
+					.content
+						img.gallery-item-image(src='https:'+image.fields.file.url)
+				figcaption.gallery-item-caption!= typogr.typogrify(image.fields.title)
+	#content
+		if images
+			each p, index in images
+				if index%4===0
+					.row
+						each image in images.slice(index,index+4)
+							+galleryImage(image)
+
+block postContent
+	include ./helpers/modal
+	+modal(event.fields.title,'gallery-modal')
+	script.
+		loadScript(function(){
+			// initialise the modal
+			var modal = $('#gallery-modal');
+			$('.gallery-item-image').click(function(event){
+				var image = $(this).clone();
+				var caption = $(this).parents('.gallery-item').find('.gallery-item-caption').html();
+				var modalBody = modal.find('.modal-body');
+				var modalFooter = modal.find('.modal-footer')
+				modalBody.append(image);
+				modalFooter.append(caption);
+				modal.modal('show');
+				modal.on('shown.bs.modal', function(event){
+					setTimeout(window.lazySizes.autoSizer.checkElems(),50);
+				});
+				modal.on('hidden.bs.modal', function(event){
+					modalBody.children().remove();
+					modalFooter.html('');
+				});
+			})
+		});

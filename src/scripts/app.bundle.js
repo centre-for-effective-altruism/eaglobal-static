@@ -28,7 +28,7 @@
 // cookies
 global.cookies = require('browser-cookies');
 // lazysizes
-require('lazysizes');
+global.lazySizes = require('lazysizes');
 require('lazysizesRespImg');
 require('lazysizesBGSet');
 // bootstrap javascript plugins
@@ -61,8 +61,9 @@ global.breakpoints = {
 // require('scrollmagicJQuery')
 // require('scrollmagicAnimationGSAP')
 
+global.debounce = require('throttleDebounce').debounce;
+
 // jQuery Plugins
-require('jqueryThrottleDebounce');
 // global.iFrameResize = require('iframeResizer');
 
 // form/data validation library

@@ -1,5 +1,5 @@
 // code to make the window scroll smoothly on hash change move back by 
-;(function($){
+(function($){
   var navHeight = $('#navbar-main').outerHeight() + 20;
   var scrollHash = function(event) {
       scrollBy(0, -navHeight);
@@ -7,10 +7,10 @@
   if (location.hash) scrollHash();
   $(window).on("hashchange", scrollHash);
 
-})(jQuery)
+})(jQuery);
 
 // highlight footnotes when they're clicked
-;(function($){
+(function($){
     var t;
     var removeHighlights = function (timeout) {
         timeout = timeout || false;
@@ -30,12 +30,44 @@
         $($(this).attr('href')).parent('sup').addClass('highlighted')
     });
 
-})(jQuery)
+}(jQuery));
 
+// show and hide the menu bar background/logo depending on whether the main logo is showing
+(function($, debounce){
+    var mainLogo = $('#header-logo');
+    var nav = $('#navbar-main');
+    if(!mainLogo.length){
+        nav.removeClass('nav-minimal');
+        return;
+    }
+    var logoOffset,navOffset;
+    function calculateOffsets(){
+        logoOffset = mainLogo.offset().top + (mainLogo.outerHeight() / 2);
+        navOffset = nav.offset().top + nav.outerHeight();
+    }
+    function setNavClasses(){
+        if(navOffset < logoOffset){
+            nav.addClass('nav-minimal')
+        } else {
+            nav.removeClass('nav-minimal')
+        }
+    }
+    function run(){
+        calculateOffsets();
+        setNavClasses();
+    }
+    run();
+    $(document).ready(run);
+    $(document).scroll(debounce(100,run));
+    $(document).resize(debounce(100,run));
+    nav.mouseover(function(){nav.removeClass('nav-minimal')});
+    nav.mouseout(run);
+
+}(jQuery, debounce));
 
 
 // wrapper for `validate` library for consistent form validation handling.
-;(function( $, validateLib ){
+(function( $, validateLib ){
     $.fn.validate = function(rules, callback) {
         if(typeof rules !== 'object' || typeof rules === null){
             throw new Error ('No rules object provided')
@@ -89,7 +121,7 @@
     }; 
 })( jQuery, validate );
 
-;(function($){
+(function($){
     var toc = $('#table-of-contents>.table-of-contents-wrapper');
     if(!toc.length) return;
     var nav = $('#navbar-main');
