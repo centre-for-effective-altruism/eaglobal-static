@@ -1,9 +1,54 @@
-extends ./page
+extends ./layout
 	
-block postContent
-	ul
-		each child in breadcrumb_path[0].children
-			li
-				h3
-					a(href=child.file.canonical)!= child.file.title
-				p!= child.file.excerpt
+block content
+	//- Files
+	include ./components/cards
+	- var perRow = 4
+	- var cardOpts = {}
+	if slug === 'talks'
+		- cardOpts.speakers = true
+		- cardOpts.event = true
+	if slug === 'events'
+		- cardOpts.location = false
+		- cardOpts.dates = true
+	if slug === 'events' && pagination.num === 1
+		- var upcomingEvents = []
+		- var pastEvents = []
+		each event in pagination.files
+			if !event.startDate || moment(event.startDate).isAfter(moment(),'day')
+				- upcomingEvents.push(event)
+			else
+				- pastEvents.push(event)
+		if upcomingEvents.length>0
+			- perRow = 3
+			section.section-divider
+				h2 Upcoming Events
+				each i, index in upcomingEvents
+					if index%perRow === 0
+						.row
+							each item in upcomingEvents.slice(index,index+perRow)
+								.col-sm-4
+									+card(item,cardOpts)
+		if pastEvents.length>0
+			- perRow = 4
+			section.section-divider
+				h2 Past Events
+				each i, index in pastEvents
+					if index%perRow === 0
+						.row
+							each item in pastEvents.slice(index,index+perRow)
+								.col-sm-6.col-md-3
+									+card(item,cardOpts)
+	else
+		each i, index in pagination.files
+			if index%perRow === 0
+				.row
+					each item in pagination.files.slice(index,index+perRow)
+						.col-sm-6.col-md-3
+							+card(item,cardOpts)
+
+	//- Pagination
+	if pagination.previous
+		a() Previous
+	if pagination.next
+		a() Next

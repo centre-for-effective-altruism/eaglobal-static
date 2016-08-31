@@ -9,10 +9,11 @@ nav#navbar-main.navbar.navbar-primary.navbar-fixed-top.nav-minimal
             ul.nav.navbar-nav
                 if seriesSet['main-navigation'] && seriesSet['main-navigation'].children
                     each item in seriesSet['main-navigation'].children
+                        - var file = item.file
                         case item.type
                             when 'page'
-                                li.nav(class=(breadcrumb_path && breadcrumb_path[0] && breadcrumb_path[0].path === item.file.path ? 'active' : ''))
-                                    a(href=item.file.canonical, id="navbar-link-"+slug, title=item.file.title)!= item.file.shortTitle || item.file.title
+                                li.nav(class=(breadcrumb_path && breadcrumb_path[0] && breadcrumb_path[0].path === file.path ? 'active' : ''))
+                                    a(href=file.canonical, id="navbar-link-"+file.slug, title=file.title)!= file.shortTitle || file.title
                             when 'link'
-                                li.nav
-                                    a(href=item.file.url id="navbar-link-"+slug target="_blank")!= item.file.title
+                                li.nav(class=(file.url.substr(0,1)==='/' && path.replace(/\//g,'') === file.url.replace(/\//g,'') ? 'active' : ''))
+                                    a(href=file.url id="navbar-link-"+slugify(file.title) target=file.url.substr(0,1)==='/'?false:'_blank')!= file.title

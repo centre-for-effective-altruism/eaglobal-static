@@ -37,7 +37,7 @@ block content
 					if s.sys.id === id
 						- speakerTalks.push(talk)
 		if speakerTalks.length
-			include ./helpers/embed-link
+			include ./components/cards
 			section.speaker-talks.section-divider
 				h2.speaker-talks-title Talks
 				.row
@@ -51,4 +51,4 @@ block content
 					each talk in speakerTalks
 						div(class=talkWidthClasses)
 							.speaker-talks-talk
-								+embedLink(talk,{event:true, speakers:false})
+								+card(talk,{event:true, speakers:false})

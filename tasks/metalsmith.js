@@ -31,7 +31,7 @@ var lazysizes = require('metalsmith-lazysizes');
 var branch  = require('metalsmith-branch');
 var collections  = require('metalsmith-collections');
 var excerpts = require('metalsmith-excerpts');
-// var pagination = require('metalsmith-pagination');
+var pagination = require('metalsmith-pagination');
 var navigation = require('metalsmith-navigation');
 message('Loaded metadata');
 // static file compilation
@@ -281,16 +281,52 @@ function build(buildCount){
             },
             'events': {
                 pattern: 'events/**/index.html',
-                sortBy: 'date',
-                reverse: true,
+                sortBy: function(a,b){
+                    // handle missing start dates
+                    if (!a.startDate && !b.startDate) {
+                        // if we have no information, sort by the last time the event was edited
+                        return moment(a.updated).isAfter(b.updated);
+                    }
+                    if (!a.startDate && b.startDate) {
+                        // sort up relative to a past event
+                        if(moment(b.startDate).isBefore(moment(),'day')) return 1;
+                        // sort down relative to an upcoming event
+                        if(moment(b.startDate).isSameOrAfter(moment(),'day')) return -1;
+                    }
+                    if (a.startDate && !b.startDate) {
+                        // sort down relative to a past event
+                        if(moment(a.startDate).isBefore(moment(),'day')) return -1;
+                        // sort up relative to an upcoming event
+                        if(moment(a.startDate).isSameOrAfter(moment(),'day')) return 1;
+                    }
+                    // otherwise, sort by start date
+                    if (moment(a.startDate).isBefore(moment(b.startDate),'day')) return 1;
+                    if (moment(a.startDate).isAfter(moment(b.startDate),'day')) return -1;
+                    if (moment(a.startDate).isSame(moment(b.startDate),'day')) return 0;
+                    return 0;
+                },
                 metadata: {
                     singular: 'event',
                 }
             },
             'talks': {
                 pattern: 'talks/**/index.html',
-                sortBy: '',
-                reverse: true,
+                sortBy: function(a,b){
+                    if(moment(a.event.fields.startDate).isBefore(moment(b.event.fields.startDate),'day')) return 1;
+                    if(moment(a.event.fields.startDate).isAfter(moment(b.event.fields.startDate),'day')) return -1;
+                    // presumably the same event
+                    if(moment(a.event.fields.startDate).isSame(moment(b.event.fields.startDate),'day')){
+                        // featured events to the front
+                        if(a.isFeatured && !b.isFeatured) return -1;
+                        if(!a.isFeatured && b.isFeatured) return 1;
+                        if(a.isFeatured === b.isFeatured) {
+                            // otherwise sort on view count
+                            if (a.viewCount > b.viewCount) return -1;
+                            if (a.viewCount < b.viewCount) return 1;
+                        }
+                    }
+                    return 0;
+                },
                 metadata: {
                     singular: 'talk',
                 }
@@ -305,12 +341,44 @@ function build(buildCount){
             }
         }))
         .use(logMessage('Added files to collections'))
-        // .use(function (files, metalsmith, done) {
-        //     Object.keys(files).filter(minimatch.filter('**/*.html')).forEach(function(file){
-        //         console.log(file);
-        //         console.log(files[file]);
-        //     });
-        // })
+        .use(pagination({
+            'collections.talks': {
+                perPage: 20,
+                template: 'collection.pug',
+                first: 'talks/index.html',
+                path: 'talks/:num/index.html',
+                pageMetadata: {
+                  title: 'Talks',
+                  slug: 'talks',
+                  contentType: 'talk',
+                  collectionSlug: 'collection'
+                }
+            },
+            'collections.events': {
+                perPage: 20,
+                template: 'collection.pug',
+                first: 'events/index.html',
+                path: 'events/:num/index.html',
+                pageMetadata: {
+                  title: 'Events',
+                  slug: 'events',
+                  contentType: 'event',
+                  collectionSlug: 'collection'
+                }
+            },
+            'collections.speakers': {
+                perPage: 20,
+                template: 'collection.pug',
+                first: 'speakers/index.html',
+                path: 'speakers/:num/index.html',
+                pageMetadata: {
+                  title: 'Speakers',
+                  slug: 'speakers',
+                  contentType: 'speaker',
+                  collectionSlug: 'collection'
+                }
+            }
+        }))
         .use(function (files, metalsmith, done) {
             // check all of our HTML files have slugs
             Object.keys(files).filter(minimatch.filter('**/*.html')).forEach(function(file){
@@ -415,7 +483,9 @@ function build(buildCount){
             metalsmith.metadata().fileIDMap = {};
             var fileIDMap = metalsmith.metadata().fileIDMap;
             Object.keys(files).filter(minimatch.filter('**/*.html')).forEach(function(file){
-                fileIDMap[files[file].data.sys.id] = files[file];
+                if (files[file].id) {
+                    fileIDMap[files[file].id] = files[file];
+                }
             });
             done();
         })
@@ -468,6 +538,13 @@ function build(buildCount){
 
         })
         .use(logMessage('Built series hierarchy'))
+        // .use(function (files, metalsmith, done) {
+        //     var talks = metalsmith.metadata().collections['talks'];
+        //     talks.forEach(function(talk){
+        //         console.log(talk.tags);
+        //     });
+        // })
+        // .use(logMessage('Calculated related talks'))
         // Build HTML files
         .use(function (files, metalsmith, done) {
             // parse HTML files
@@ -596,7 +673,7 @@ function build(buildCount){
         .use(lazysizes({
             widths: [100,480,768,992,1200,1800],
             qualities: [ 50, 70, 70, 70, 70, 70],
-            backgrounds: ['#content-wrapper','.featured-image','.embed-link-thumbnail'],
+            backgrounds: ['#content-wrapper','.featured-image','.card-thumbnail'],
             ignore: '/images/**',
             ignoreSelectors:'.content-block-content',
             querystring: {

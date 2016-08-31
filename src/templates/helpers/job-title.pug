@@ -2,10 +2,12 @@ mixin jobTitle(speaker)
 	- speaker = speaker || {}
 	- var title = speaker.jobTitle || jobTitle
 	- var org = speaker.organization || organization
-		span.job-title
-			!= title
+	- var ws = speaker.website || website
+	span.job-title!= title
 	if title && org
 		| , 
 	if org
-		span.organization
-			a(href=org.fields.website target="_blank")!= typogr.typogrify(org.fields.title)
+		span.organization!= typogr.typogrify(org)
+	if ws
+		.website
+			a(href=ws target="_blank")!= url.parse(ws).hostname

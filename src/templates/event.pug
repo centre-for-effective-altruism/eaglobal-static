@@ -3,27 +3,20 @@ extends ./layout
 block header
 	header#header
 		include ./components/breadcrumbs
-		-var logoType = eventType === 'EA Global X' ? 'eagx' : 'eag';
+		-var logoType = slugify(eventType) === 'eagx' ? 'eagx' : 'eag';
 		include ./layout/header
 		+headerLogo(logoType)
 		+headerText(city+' '+moment(startDate).format('YYYY'))
 
 block content
+	include ./components/cards
 	#content
 		section.event-details.section-no-divider
 			.event-details-dates
-				| #{moment(startDate).format('D')}
-				if moment(endDate).isAfter(startDate,'month')
-					|  #{moment(endDate).format('MMMM')}
-				if moment(endDate).isAfter(startDate,'day')
-					|  &ndash; #{moment(endDate).format('D')}
-				|  #{moment(endDate).format('MMMM YYYY')}
+				include ./helpers/format-event-details
+				+formatEventDates()
 			.event-details-location
-				span.event-details-location-venue!=venue
-				| , 
-				span.event-details-location-city!=city
-				| , 
-				span.event-details-location-country!=country
+				+formatEventLocation()
 		//- Get all Speakers associated with this event
 		if featuredSpeakers && featuredSpeakers.length > 0
 			section.event-speakers.section-divider
@@ -42,16 +35,7 @@ block content
 					each s in featuredSpeakers.slice(0,6)
 						-var speaker = fileIDMap[s.sys.id]
 						div(class=speakerWidths)
-							.event-speakers-speaker
-								.event-speakers-speaker-photo-wrapper
-									.content
-										a(href=speaker.canonical)
-											img(src='https:'+speaker.photo.fields.file.url)
-								h3.event-speakers-speaker-title
-									a(href=speaker.canonical)!=speaker.title
-								.event-speakers-speaker-occupation
-									include ./helpers/job-title
-									+jobTitle(speaker)
+							+card(speaker)
 		
 		//- Get all Talks associated with this event
 		- var featuredTalks = []
@@ -59,13 +43,14 @@ block content
 			if talk.event.sys.id === id
 				- featuredTalks.push(talk)
 		if featuredTalks.length > 0
-			include ./helpers/embed-link
 			- var talkWidths = ['col-sm-6', 'col-sm-offset-3']
 			if featuredTalks.length === 2
 				- var talkWidths = ['col-sm-6']
 			if featuredTalks.length === 3
 				- var talkWidths = ['col-sm-4']
-			if featuredTalks.length >= 4
+			if featuredTalks.length === 4
+				- var talkWidths = ['col-md-3','col-sm-6']
+			if featuredTalks.length >= 5
 				- var talkWidths = ['col-md-2','col-sm-3']
 			section.event-talks.section-divider
 				h2.event-talks-title Featured talks
@@ -73,7 +58,7 @@ block content
 					each talk in featuredTalks.slice(0,4)
 						div(class=talkWidths)
 							.event-talks-talk
-								+embedLink(talk)
+								+card(talk)
 				.event-talks-view-all.event-view-all
 					a(href=canonical+'talks/') View all talks from #{title}
 		//- Get all Galleries associated with this event

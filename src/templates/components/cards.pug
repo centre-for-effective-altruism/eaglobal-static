@@ -1,0 +1,80 @@
+mixin card(item, opts)
+	if !item
+		.alert.alert-danger
+			p
+				strong Error
+				|  item not passed to item card
+	else 
+		//- Set options
+		- var options = opts || {}
+		- var aspectPercentage = options.aspect ? options.aspect + (options.aspect.substr(options.aspect.length-2,1) === '%'?'':'%') : false;
+		- var thumbnailField = false
+		//- change flags based on content type
+		if item.contentType === 'talk'
+			- var showSpeakers = options.speakers === false ? false : true
+			- var showEvent = options.event || false;
+			- thumbnailField = 'thumbnail'
+		if item.contentType === 'event'
+			- var showLocation = options.location || false
+			- var showDates = options.dates === false ? false : true
+			- thumbnailField = 'featuredImage'
+		if item.contentType === 'speaker'
+			- var showJobTitle = options.jobTitle === false ? false : true
+			- var showBio = options.bio || false
+			- thumbnailField = 'photo'
+		//- Set some classes for the card
+		- var cardClasses = [];
+		- cardClasses.push('card-'+item.contentType)
+		if item.contentType==='event'
+			- cardClasses.push('card-event-'+slugify(item.eventType))
+		//- merge generic flags into thumbnail styles
+		- thumbnailUrl = thumbnailField && item[thumbnailField] ? item[thumbnailField].fields.file.url : false
+		- var thumbnailStyles = {}
+		if thumbnailUrl
+			- thumbnailStyles['background-image'] = 'url('+thumbnailUrl+')'
+		else
+			- cardClasses.push('card-no-thumbnail')
+		if aspectPercentage
+			- thumbnailStyles['padding-bottom'] = aspectPercentage
+		//- Build the card
+		figure.card(class=cardClasses)
+			.card-thumbnail(style=thumbnailStyles)
+				.content
+					a.card-thumbnail-link(href=item.canonical)
+						if item.contentType === 'talk'
+							.card-play-icon-wrapper
+								i.fa.fa-play-circle
+			figcaption.card-caption
+				h4.card-title
+					a(href=item.canonical)!= typogr.typogrify(item.title)
+				if item.contentType === 'talk'
+					if showSpeakers
+						.card-talk-speakers
+							each s, index in item.speakers
+								- var speaker = fileIDMap[s.sys.id]
+								a.card-speaker(href=speaker.canonical)!= speaker.title
+								if item.speakers.length > 2 && index < item.speakers.length-2
+									| , 
+								if item.speakers.length > 1 && index === item.speakers.length-2
+									|  &amp; 
+
+					if showEvent
+						.card-talk-event
+							- var event = fileIDMap[item.event.sys.id]
+							a(href=event.canonical)!= event.title
+				if item.contentType === 'event'
+					include ../helpers/format-event-details
+					if showDates
+						.card-event-dates
+							+formatEventDates(item)
+					if showLocation
+						.card-event-location
+							+formatEventLocation(item)
+				if item.contentType === 'speaker'
+					if showJobTitle
+						include ../helpers/job-title
+						.card-speaker-jobtitle
+							+jobTitle(item)
+					if showBio && item.contentsRaw
+						.card-speaker-bio
+							!= item.contentsRaw	

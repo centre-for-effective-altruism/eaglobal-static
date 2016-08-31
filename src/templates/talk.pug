@@ -8,7 +8,10 @@ block contentWrapper
 			.embed-wrapper
 				.container
 					include ./components/responsive-embed
-					+oembed(oembed)
+					if oembed
+						+oembed(oembed)
+					else
+						+embed(embedUrl)
 			.container
 				header#header
 					h1.page-title#page-title!= typogr.typogrify(title)
@@ -18,7 +21,6 @@ block contentWrapper
 						h3.sr-only Event
 						- var ev = fileIDMap[event.sys.id]
 							h4.talk-event-title
-								i.fa.fa-globe
 								a(href=ev.canonical)!= ev.title
 						h3.sr-only Speakers
 						ul.talk-speakers
@@ -26,7 +28,6 @@ block contentWrapper
 								- var speaker = fileIDMap[s.sys.id]
 								li.talk-speaker
 									h4.talk-speaker-title
-										i.fa.fa-user
 										!= speaker.title
 									h5.talk-speaker-details
 										if speaker.jobTitle
@@ -36,8 +37,10 @@ block contentWrapper
 											| , 
 										if speaker.organization
 											span.talk-speaker-organization
-												a(href=speaker.organization.fields.website target="_blank")
-													!= speaker.organization.fields.title
+												!= speaker.organization
+										if speaker.website
+											.talk-speaker-website
+												a(href=speaker.website)!= url.parse(speaker.website).hostname
 						h3.sr-only About this talk
 						!= contents
 					aside.col-sm-4.col-md-6.talk-related
