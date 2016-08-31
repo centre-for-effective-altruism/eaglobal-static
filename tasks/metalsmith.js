@@ -691,33 +691,33 @@ function build(buildCount){
                 minifyJS: true
             }))
             .use(logMessage('Minified HTML'))
-            .use(logMessage('Cleaning CSS files',chalk.dim))
-            .use(uncss({
-                basepath: 'styles',
-                css: ['app.min.css'],
-                output: 'app.min.uncss.css',
-                removeOriginal: true,
-                uncss: {
-                    ignore: [
-                        /collaps/,
-                        /nav/,
-                        /dropdown/,
-                        /modal/,
-                        /.fade/,
-                        /.in/,
-                        /.open/,
-                        '.transparent',
-                        /lazyload/,
-                        /tooltip/,
-                        /alert/,
-                        /highlighted/,
-                        /affix/,
-                        /active/,
-                    ],
-                    media: ['(min-width: 480px)','(min-width: 768px)','(min-width: 992px)','(min-width: 1200px)']
-                }
-            }))
-            .use(logMessage('Cleaned CSS files'))
+            // .use(logMessage('Cleaning CSS files',chalk.dim))
+            // .use(uncss({
+            //     basepath: 'styles',
+            //     css: ['app.min.css'],
+            //     output: 'app.min.uncss.css',
+            //     removeOriginal: true,
+            //     uncss: {
+            //         ignore: [
+            //             /collaps/,
+            //             /nav/,
+            //             /dropdown/,
+            //             /modal/,
+            //             /.fade/,
+            //             /.in/,
+            //             /.open/,
+            //             '.transparent',
+            //             /lazyload/,
+            //             /tooltip/,
+            //             /alert/,
+            //             /highlighted/,
+            //             /affix/,
+            //             /active/,
+            //         ],
+            //         media: ['(min-width: 480px)','(min-width: 768px)','(min-width: 992px)','(min-width: 1200px)']
+            //     }
+            // }))
+            // .use(logMessage('Cleaned CSS files'))
             // concat main CSS and icon CSS together and put back in the right place
             .use(concat({
                 files: ['styles/app.min.uncss.css','styles/icons.css'],
