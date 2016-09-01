@@ -47,8 +47,19 @@ block content
 						.col-sm-6.col-md-3
 							+card(item,cardOpts)
 
-	//- Pagination
-	if pagination.previous
-		a() Previous
-	if pagination.next
-		a() Next
+	section.section-divider
+		//- Pagination
+		nav.pagination-wrapper(aria-label='Page navigation')
+			ul.pagination
+				if pagination.previous
+					li
+						a(href=pagination.previous.canonical, aria-label='Previous')
+							span(aria-hidden='true') «
+				if pagination.pages.length > 1
+					each page,index in pagination.pages
+						li
+							a(href=page.canonical)!= index+1
+				if pagination.next
+					li
+						a(href=pagination.next.canonical, aria-label='Previous')
+							span(aria-hidden='true') »

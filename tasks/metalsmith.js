@@ -44,6 +44,7 @@ var headingsIdentifier = require('metalsmith-headings-identifier');
 var headings = require('metalsmith-headings');
 var striptags = require('striptags');
 var htmlEntities = require('html-entities').Html5Entities;
+// templating utility functions
 var strip = function (input){
     // strip out HTML & decode entities for using HTML in Jade attributes
     function subs(input){
@@ -60,6 +61,13 @@ var strip = function (input){
     return htmlEntities.decode(subs(input));
 
 };
+var contentfulImage = function(image,query){
+    var src = url.parse(image.fields.file.url,true);
+    if (src.search) delete src.search;
+    src.query = Object.assign({},src.query,query);
+    src.protocol = 'https';
+    return src.format();
+}
 var jsFiles = {};
 message('Loaded static file compilation');
 
@@ -73,7 +81,7 @@ message('Loaded static file compilation');
 // only require in production
 if(process.env.NODE_ENV==='staging' || process.env.NODE_ENV==='production'){
     var htmlMinifier = require('metalsmith-html-minifier');
-    var uncss = require('metalsmith-uncss');
+    var purifyCSS = require('purify-css');
     var cleanCSS = require('metalsmith-clean-css');
     var sitemap = require('metalsmith-sitemap');
     message('Loaded production modules');
@@ -105,40 +113,6 @@ function build(buildCount){
             buildTime = process.hrtime();
             buildTimeDiff = buildTime;
         }
-        // // hacky solution to share data between Contentful pages and the 'pagination' plugin
-        // var collectionSlugs = ['ideas'];
-        // var collectionInfo = {
-        //     ideas: {
-        //         title: 'Articles',
-        //         singular: 'article',
-        //         // sortBy: 'date',
-        //         // reverse: false,
-        //         perPage: 10
-        //     },
-        // };
-        // var collectionData = {};
-        // var collectionOptions = {};
-        // var paginationOptions = {};
-        // collectionSlugs.forEach(function(slug){
-        //     collectionData[slug] = {};
-        //     collectionOptions[slug] = {
-                
-        //             pattern: collectionInfo[slug].singular+'/**/*.html',
-        //             sortBy: collectionInfo[slug].sortBy || 'title',
-        //             reverse: collectionInfo[slug].reverse || false,
-        //             metadata: {
-        //                 singular: collectionInfo[slug].singular,
-        //             }
-                
-        //     };
-        //     paginationOptions['collections.'+slug] = {
-        //         perPage: collectionInfo[slug].perPage || 100,
-        //         template: './partials/collection-'+slug+'.swig',
-        //         first: slug+'/index.html',
-        //         path: slug+'/page/:num/index.html',
-        //         pageMetadata: collectionData[slug]
-        //     };
-        // });
 
         // hostnames where we should trigger an embed instead of a straight link
         var embedHostnames = [
@@ -160,7 +134,8 @@ function build(buildCount){
             typogr,
             slugify: slug,
             moment,
-            embedHostnames
+            embedHostnames,
+            contentfulImage
         };
 
 
@@ -284,8 +259,11 @@ function build(buildCount){
                 sortBy: function(a,b){
                     // handle missing start dates
                     if (!a.startDate && !b.startDate) {
+                        // push EAGs over EAGXs
+                        if (slug(a.eventType)==='eagx' && slug(b.eventType)!=='eagx') return 1;
+                        if (slug(a.eventType)!=='eagx' && slug(b.eventType)==='eagx') return -1;
                         // if we have no information, sort by the last time the event was edited
-                        return moment(a.updated).isAfter(b.updated);
+                        return moment(a.updated).isAfter(b.updated) ? -1 : 1;
                     }
                     if (!a.startDate && b.startDate) {
                         // sort up relative to a past event
@@ -662,6 +640,7 @@ function build(buildCount){
             // collectionSlugs,
             // collectionInfo,
             embedHostnames,
+            contentfulImage,
             environment: process.env.NODE_ENV
         }))
         .use(logMessage('Built HTML files from templates'))
@@ -691,38 +670,29 @@ function build(buildCount){
                 minifyJS: true
             }))
             .use(logMessage('Minified HTML'))
-            // .use(logMessage('Cleaning CSS files',chalk.dim))
-            // .use(uncss({
-            //     basepath: 'styles',
-            //     css: ['app.min.css'],
-            //     output: 'app.min.uncss.css',
-            //     removeOriginal: true,
-            //     uncss: {
-            //         ignore: [
-            //             /collaps/,
-            //             /nav/,
-            //             /dropdown/,
-            //             /modal/,
-            //             /.fade/,
-            //             /.in/,
-            //             /.open/,
-            //             '.transparent',
-            //             /lazyload/,
-            //             /tooltip/,
-            //             /alert/,
-            //             /highlighted/,
-            //             /affix/,
-            //             /active/,
-            //         ],
-            //         media: ['(min-width: 480px)','(min-width: 768px)','(min-width: 992px)','(min-width: 1200px)']
-            //     }
-            // }))
-            // .use(logMessage('Cleaned CSS files'))
+            .use(logMessage('Cleaning CSS',chalk.dim))
+            .use(function purifyCss (files, metalsmith, done) {
+                var cssFile = 'styles/app.min.css';
+                var whitelist = [
+                ];
+                var html = [];
+                Object.keys(files).filter(minimatch.filter('**/*.@(html|js)')).forEach(function(file){
+                    html.push(files[file].contents.toString())
+                });
+                html = html.join('\n');
+                var purifiedCSS = purifyCSS(html, files[cssFile].contents.toString(), {
+                    whitelist: whitelist,
+                });
+                files[cssFile].contents = new Buffer(purifiedCSS);
+                done();
+            })
+            .use(logMessage('Cleaned CSS files'))
             // concat main CSS and icon CSS together and put back in the right place
             .use(concat({
-                files: ['styles/app.min.uncss.css','styles/icons.css'],
+                files: ['styles/app.min.css','styles/icons.css'],
                 output: 'styles/app.min.css',
-                keepConcatenated: false
+                keepConcatenated: false,
+                forceOutput: true
             }))
             .use(logMessage('Concatenated CSS files'))
             .use(cleanCSS({

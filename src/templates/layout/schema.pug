@@ -15,8 +15,8 @@ mixin defaultOGImageTags
 	meta(property="og:image:height" content=650)
 	
 mixin ogImageFromContentfulLink(image)
-	if image && image.fields.file.url
-		- var imageURL = 'https:' + image.fields.file.url
+	if image
+		- var imageURL = contentfulImage(image)
 		- var imageWidth = image.fields.file.details.image.width
 		- var imageHeight = image.fields.file.details.image.height
 		//- largest possible size
@@ -49,8 +49,8 @@ meta(name="twitter:site" content="@Effect_Altruism")
 meta(name="twitter:creator" content="@Effect_Altruism")
 case collectionSlug
 	when 'person'
-		if photo && photo.fields.file.url
-			- var twitterImage = 'https:' + photo.fields.file.url + '?w=150'
+		if photo
+			- var twitterImage = contentfulImage(photo,{w:150})
 	default
 		- var twitterImage = twitterImage || site.url + '/images/social/ea-og-image-120x120.png'
 meta(name="twitter:image" content=twitterImage)

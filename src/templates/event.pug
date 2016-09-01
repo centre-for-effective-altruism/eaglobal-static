@@ -6,7 +6,7 @@ block header
 		-var logoType = slugify(eventType) === 'eagx' ? 'eagx' : 'eag';
 		include ./layout/header
 		+headerLogo(logoType)
-		+headerText(city+' '+moment(startDate).format('YYYY'))
+		+headerText(title)
 
 block content
 	include ./components/cards
@@ -17,6 +17,15 @@ block content
 				+formatEventDates()
 			.event-details-location
 				+formatEventLocation()
+		if description && contactEmail
+			section.event-basic-info.section-divider
+				if description
+					.event-basic-info-description
+						!= contents
+				if moment(endDate).add(14,'days').isAfter(moment(),'day') && contactEmail
+					.event-basic-info-contact
+						| For more information email 
+						a(href=contactEmail)!= contactEmail
 		//- Get all Speakers associated with this event
 		if featuredSpeakers && featuredSpeakers.length > 0
 			section.event-speakers.section-divider
@@ -28,39 +37,28 @@ block content
 					if featuredSpeakers.length === 3
 						- speakerWidths = ['col-sm-4']
 					if featuredSpeakers.length === 4
-						- speakerWidths = ['col-sm-6']
+						- speakerWidths = ['col-sm-3']
 					if featuredSpeakers.length >= 5
 						- speakerWidths = ['col-sm-4']
 
 					each s in featuredSpeakers.slice(0,6)
 						-var speaker = fileIDMap[s.sys.id]
-						div(class=speakerWidths)
-							+card(speaker)
-		
-		//- Get all Talks associated with this event
-		- var featuredTalks = []
+						div.event-speakers-speaker(class=speakerWidths)
+							+card(speaker, {website: false, aspect: '66.66%',readMore:true})
+		//- Get all talks associated with this event
+		- var showFeaturedTalks = false
 		each talk in talks
 			if talk.event.sys.id === id
-				- featuredTalks.push(talk)
-		if featuredTalks.length > 0
-			- var talkWidths = ['col-sm-6', 'col-sm-offset-3']
-			if featuredTalks.length === 2
-				- var talkWidths = ['col-sm-6']
-			if featuredTalks.length === 3
-				- var talkWidths = ['col-sm-4']
-			if featuredTalks.length === 4
-				- var talkWidths = ['col-md-3','col-sm-6']
-			if featuredTalks.length >= 5
-				- var talkWidths = ['col-md-2','col-sm-3']
+				- showFeaturedTalks = true
+		if showFeaturedTalks
 			section.event-talks.section-divider
-				h2.event-talks-title Featured talks
-				.row
-					each talk in featuredTalks.slice(0,4)
-						div(class=talkWidths)
-							.event-talks-talk
-								+card(talk)
-				.event-talks-view-all.event-view-all
-					a(href=canonical+'talks/') View all talks from #{title}
+				h2.event-talks-title Featured Talks
+				include ./components/featured-talks
+				+featuredTalks(id)
+				.event-talks-view-all.view-all-link
+					a(href='/talks/') View all talks
+					//- from #{title}
+
 		//- Get all Galleries associated with this event
 		each gallery in galleries
 			if gallery.event && gallery.event.sys.id === id
@@ -72,6 +70,6 @@ block content
 								figure.event-photos-photo-wrapper
 									.content
 										a(href=gallery.canonical)
-											img.event-photos-photo(src='https:'+image.fields.file.url)
+											img.event-photos-photo(src=contentfulImage(image))
 					.event-talks-view-all.event-view-all
 						a(href=gallery.canonical) View all photos from #{title}

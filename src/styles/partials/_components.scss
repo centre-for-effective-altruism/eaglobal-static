@@ -64,6 +64,9 @@
 	font-family: sans-serif;
 }
 
+.pagination-wrapper {
+	text-align: center;
+}
 
 
 span {
@@ -97,6 +100,32 @@ span {
 	}
 }
 
+.view-all-link {
+	font-family: $font-family-sans-serif;
+	text-align: center;
+	&>a {
+		color: #999;
+	}
+}
+
+
+.speakers-list {
+	display: inline-block;
+	margin: 0;
+	padding: 0;
+	@include clearfix();
+	&>li {
+		float: left; display: block;
+	}
+}
+$speaker-list-divider-margin: 0.3em;
+.speakers-list-divider-comma {
+	margin-right: $speaker-list-divider-margin;
+}
+.speakers-list-divider-amp {
+	margin-left: $speaker-list-divider-margin;
+	margin-right: $speaker-list-divider-margin;
+}
 
 // members page
 

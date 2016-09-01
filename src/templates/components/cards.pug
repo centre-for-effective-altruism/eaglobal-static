@@ -7,7 +7,7 @@ mixin card(item, opts)
 	else 
 		//- Set options
 		- var options = opts || {}
-		- var aspectPercentage = options.aspect ? options.aspect + (options.aspect.substr(options.aspect.length-2,1) === '%'?'':'%') : false;
+		- var aspectPercentage = options.aspect ? options.aspect + (options.aspect.substr(options.aspect.length-1,1) === '%'?'':'%') : false;
 		- var thumbnailField = false
 		//- change flags based on content type
 		if item.contentType === 'talk'
@@ -20,6 +20,11 @@ mixin card(item, opts)
 			- thumbnailField = 'featuredImage'
 		if item.contentType === 'speaker'
 			- var showJobTitle = options.jobTitle === false ? false : true
+			- var readMore = options.readMore || false
+			if showJobTitle
+				- var jobTitleOptions = {}
+				if options.website === false
+					- jobTitleOptions.website = false
 			- var showBio = options.bio || false
 			- thumbnailField = 'photo'
 		//- Set some classes for the card
@@ -28,7 +33,7 @@ mixin card(item, opts)
 		if item.contentType==='event'
 			- cardClasses.push('card-event-'+slugify(item.eventType))
 		//- merge generic flags into thumbnail styles
-		- thumbnailUrl = thumbnailField && item[thumbnailField] ? item[thumbnailField].fields.file.url : false
+		- thumbnailUrl = thumbnailField && item[thumbnailField] ? contentfulImage(item[thumbnailField]) : false
 		- var thumbnailStyles = {}
 		if thumbnailUrl
 			- thumbnailStyles['background-image'] = 'url('+thumbnailUrl+')'
@@ -49,14 +54,9 @@ mixin card(item, opts)
 					a(href=item.canonical)!= typogr.typogrify(item.title)
 				if item.contentType === 'talk'
 					if showSpeakers
+						include ../helpers/format-multiple-speakers
 						.card-talk-speakers
-							each s, index in item.speakers
-								- var speaker = fileIDMap[s.sys.id]
-								a.card-speaker(href=speaker.canonical)!= speaker.title
-								if item.speakers.length > 2 && index < item.speakers.length-2
-									| , 
-								if item.speakers.length > 1 && index === item.speakers.length-2
-									|  &amp; 
+							+formatMultipleSpeakers(item.speakers)
 
 					if showEvent
 						.card-talk-event
@@ -74,7 +74,9 @@ mixin card(item, opts)
 					if showJobTitle
 						include ../helpers/job-title
 						.card-speaker-jobtitle
-							+jobTitle(item)
+							+jobTitle(item, jobTitleOptions)
 					if showBio && item.contentsRaw
 						.card-speaker-bio
 							!= item.contentsRaw	
+					if readMore
+						a.card-speaker-more(href=item.canonical) Read more about #{item.title}

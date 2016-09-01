@@ -1,8 +1,9 @@
-mixin jobTitle(speaker)
+mixin jobTitle(speaker, opts)
 	- speaker = speaker || {}
+	- options = opts || {}
 	- var title = speaker.jobTitle || jobTitle
 	- var org = speaker.organization || organization
-	- var ws = speaker.website || website
+	- var ws = options.website !== false ? speaker.website || website : false
 	span.job-title!= title
 	if title && org
 		| , 

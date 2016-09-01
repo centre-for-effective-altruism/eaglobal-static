@@ -1,6 +1,7 @@
 extends ./layout
 
 block contentWrapper
+	- var ev = fileIDMap[event.sys.id]
 	section#content-wrapper
 		.container
 			include ./layout/warnings
@@ -15,36 +16,14 @@ block contentWrapper
 			.container
 				header#header
 					h1.page-title#page-title!= typogr.typogrify(title)
-				.row
-					.col-sm-8.col-md-6
-						h2.sr-only About this talk
-						h3.sr-only Event
-						- var ev = fileIDMap[event.sys.id]
-							h4.talk-event-title
-								a(href=ev.canonical)!= ev.title
-						h3.sr-only Speakers
-						ul.talk-speakers
-							each s in speakers
-								- var speaker = fileIDMap[s.sys.id]
-								li.talk-speaker
-									h4.talk-speaker-title
-										!= speaker.title
-									h5.talk-speaker-details
-										if speaker.jobTitle
-											|  
-											span.talk-speaker-job-title!= speaker.jobTitle
-										if speaker.jobTitle && speaker.organization
-											| , 
-										if speaker.organization
-											span.talk-speaker-organization
-												!= speaker.organization
-										if speaker.website
-											.talk-speaker-website
-												a(href=speaker.website)!= url.parse(speaker.website).hostname
-						h3.sr-only About this talk
-						!= contents
-					aside.col-sm-4.col-md-6.talk-related
-						h3.talk-related-title Related talks
-						ul
-							each talk in ['Talk 1', 'Talk 2']
-								li!= talk
+				section.talk-basic-info.section-no-divider
+					h2.sr-only About this talk
+					h3.sr-only Speakers
+					.talk-speakers
+						include ./helpers/format-multiple-speakers
+						+formatMultipleSpeakers(speakers)
+					h3.sr-only Event
+						h4.talk-event-title
+							a(href=ev.canonical)!= ev.title
+				section.talk-description.section-divider
+					!= contents

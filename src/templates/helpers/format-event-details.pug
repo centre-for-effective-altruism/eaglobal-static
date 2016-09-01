@@ -25,13 +25,16 @@ mixin formatEventLocation(ev, opts)
 	- var showCity = options.city === false ? false : true
 	- var showCountry = options.country === false ? false : true
 	span.event-location
-		if showVenue
-			span.event-location-venue!=eventVenue
-		if showVenue && showCity
-			| , 
-		if showCity
-			span.event-location-city!=eventCity
-		if showCity && showCountry
-			| , 
-		if showCountry
-			span.event-location-country!=eventCountry
+		if eventCity && eventCountry
+			if showVenue && eventVenue
+				span.event-location-venue!=eventVenue
+			if showVenue && eventVenue && showCity && eventCity
+				| , 
+			if showCity && eventCity
+				span.event-location-city!=eventCity
+			if showCity && eventCity && showCountry && eventCountry
+				| , 
+			if showCountry
+				span.event-location-country!=eventCountry
+		else 
+			span.event-location-tba Location TBA

@@ -6,8 +6,10 @@ head
     meta(charset='utf-8')
     meta(http-equiv='X-UA-Compatible', content='IE=edge')
     title
-        != (slug==='home'? site.shortDescription : title)
-        |  - #{site.title}
+        if slug==='home'
+            | #{site.title} – #{site.shortDescription}
+        else
+            | #{title} - #{site.title}
     meta(name='viewport', content='width=device-width, initial-scale=1')
     link(rel='canonical', href=canonicalURL)
     meta(name='description', content=strip(description))
@@ -22,13 +24,13 @@ head
         // fast pre-rendering check for javascript capability without requiring Modernizr in the head
         var h = document.documentElement
         h.className = h.className.replace('no-js','js');
-        // hide text while webfonts load, but unhide after three seconds if they haven't loaded yet
+        // hide text while webfonts load, but unhide after half a second if they haven't loaded yet
         h.className += " wf-loading";
         window.wfInactive = false;
         window.wfl = setTimeout(function(){
             window.wfInactive = true;
             h.className=h.className.replace('wf-loading','wf-inactive');
-        },1500)
+        },500)
         // defer execution of jquery-dependent scripts defined before jQuery loads
         window.q=[];window.$=function(f){q.push(f)}
         // enqueue scripts at the end of the page from before the closing body tag
@@ -39,6 +41,6 @@ head
         // load the script
         }}();
     if environment !== 'development'
-        script analytics.load("zbkLJhxMO425xQwGvutCFLjmUuzNY8N3");
+        script analytics.load("ZdyjGpt6DFxdicLavj5y9EvJfdQ4xDgB");
     script analytics.page('#{title}')
     block head

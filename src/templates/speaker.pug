@@ -25,7 +25,7 @@ block content
 
 				if photo
 					.speaker-bio-photo(class=photoWidths)
-						img(src=photo.fields.file.url)
+						img(src=contentfulImage(photo))
 				if hasBio
 					.speaker-bio-text(class=bioWidths)
 						!= contents
