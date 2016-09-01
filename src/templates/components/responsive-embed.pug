@@ -36,3 +36,20 @@ mixin oembed(oembed, opts)
 
 	.embed-responsive(style='padding-bottom: '+aspectPercentage+'%;')
 		iframe.embed-responsive-item(src=url.format(href))
+
+
+//- mixin embedModal(embedSrc,opts)
+//- 	- var options = opts || {}
+//- 	- var linkText = options.text
+//- 	- var title = options.title
+//- 	- var classNames = options.classNames
+
+//- 	.embed-modal-launch-button-wrapper
+
+//- 	include ../helpers/modal
+//- 	+modal(title, id)
+//- 		+embed(embedSrc)
+//- 	script.
+//- 		loadScript(function(){
+			
+//- 		})
