@@ -402,6 +402,9 @@ function build(buildCount){
                 files[filePath].title = 'Photos';
                 delete files[file];
             })
+            // hack to get eagx/organize into place
+            files['eagx/organize/index.html'] = files['organize-eagx/index.html'];
+            delete files['organize-eagx/index.html'];
             done();
         })
         .use(logMessage('Moved files into place'))
@@ -410,7 +413,7 @@ function build(buildCount){
         // })
         .use(function (files,metalsmith,done){
             // add paths to HTML files
-            Object.keys(files).filter(minimatch.filter('**/index.html')).forEach(function(file){
+            Object.keys(files).filter(minimatch.filter('**/*.html')).forEach(function(file){
                 files[file].path = file!=='index.html' ? file.replace('/index.html','') : '/';
                 files[file].canonical = (file!=='index.html' ? '/' : '') + files[file].path + (file!=='index.html' ? '/' : '');
             });
