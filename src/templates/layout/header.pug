@@ -1,4 +1,6 @@
 mixin headerLogo(type)
+	if breadcrumb_path.length && breadcrumb_path[0].file && breadcrumb_path[0].file.slug === 'eagx'
+		- type = 'eagx';
 	- type = type || 'eag'
 		#header-logo.row
 			.col-md-6.col-md-offset-3
