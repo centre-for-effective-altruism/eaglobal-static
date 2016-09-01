@@ -40,15 +40,11 @@
 		// @include first-paragraph();
 	}
 	hr {
-		border: none;
-		height: 1px;
-		position: relative;
+		width: 50%;
 		text-align: center;
-		&:before {
-			content: "* * *";
-			position: absolute;
-			top: -0.65em;
-		}
+		margin-left: auto;
+		margin-right: auto;
+		border-color: #CCC;
 	}
 	&>a.btn {
 		margin-bottom: 16.5px;
