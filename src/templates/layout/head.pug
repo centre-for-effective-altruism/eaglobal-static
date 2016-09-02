@@ -41,6 +41,13 @@ head
         // load the script
         }}();
     if environment !== 'development'
-        script analytics.load("ZdyjGpt6DFxdicLavj5y9EvJfdQ4xDgB");
-    script analytics.page('#{title}')
+        script.
+            analytics.load("ZdyjGpt6DFxdicLavj5y9EvJfdQ4xDgB");
+            analytics.page('#{title}')
+        if slug === '404'
+        script.
+            analytics.track('HTTPError',{
+                code: 404,
+                path: window.location.pathname
+            });
     block head
