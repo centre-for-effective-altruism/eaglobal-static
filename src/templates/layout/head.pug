@@ -45,9 +45,9 @@ head
             analytics.load("ZdyjGpt6DFxdicLavj5y9EvJfdQ4xDgB");
             analytics.page('#{title}')
         if slug === '404'
-        script.
-            analytics.track('HTTPError',{
-                code: 404,
-                path: window.location.pathname
-            });
+            script.
+                analytics.track('HTTPError',{
+                    code: 404,
+                    path: window.location.pathname
+                });
     block head
