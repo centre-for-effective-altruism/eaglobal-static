@@ -47,7 +47,7 @@ head
         if slug === '404'
             script.
                 analytics.track('HTTPError',{
-                    code: 404,
-                    path: window.location.pathname
+                    'HttpError.Code': 404,
+                    'HTTPError.Path': window.location.pathname
                 });
     block head
