@@ -15,7 +15,8 @@ block content
 				.gallery-image-wrapper
 					.content
 						img.gallery-item-image(src=contentfulImage(image))
-				figcaption.gallery-item-caption!= typogr.typogrify(image.fields.title)
+				if image.fields.description
+					figcaption.gallery-item-caption!= typogr.typogrify(image.fields.description)
 	#content
 		if images
 			each p, index in images

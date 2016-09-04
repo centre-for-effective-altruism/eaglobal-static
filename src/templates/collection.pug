@@ -8,6 +8,8 @@ block content
 	if slug === 'talks'
 		- cardOpts.speakers = true
 		- cardOpts.event = true
+	if slug === 'speakers'
+		- cardOpts.website = false
 	if slug === 'events'
 		- cardOpts.location = false
 		- cardOpts.dates = true
