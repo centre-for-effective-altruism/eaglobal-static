@@ -3,8 +3,7 @@ console.log(chalk.bold.cyan.inverse('Processing Javascript files'));
 
 var Promise = require('bluebird')
 
-var fs = require('fs');
-Promise.promisifyAll(fs);
+var fs = Promise.promisifyAll(require('fs'));
 fs.existsAsync = Promise.promisify (function exists(path, cb) {
     fs.exists(path, function (exists) { cb(null, exists); });
 });
@@ -12,7 +11,6 @@ fs.existsAsync = Promise.promisify (function exists(path, cb) {
 var path = require('path')
 var rm = require('rimraf');
 var cp = require('ncp');
-var recursiveReaddir = require('recursive-readdir');
 
 var Browserify = require('browserify')
 var uglify = Promise.promisifyAll(require('uglify-js'))
@@ -37,58 +35,24 @@ new Promise(function(resolve,reject){
     return fs.mkdirAsync(destPath)
     .catch(function(err){if(err.code !== 'EEXIST') throw err})
 })
-.then(function(){ return recursive(path.join(srcPath))})
+.then(function(){ 
+    return fs.readdirAsync(srcPath);
+})
 .then(function(files){
-    
     // split files into includes and bundles
-    var includes = files.filter(filter('**/includes/**/*.js'));
-    var bundles  = files.filter(filter('**/*.bundle.js'));
-    
-    // error check to make sure we don't have any filename collisions
-    var fileNames = [];
-    [...includes,...bundles].map(function(file){
-        return path.basename(file);
-    }).forEach(function(fileName){
-        if(fileNames.indexOf(fileName)===-1){
-            fileNames.push(fileName);
-        } else {
-            console.error(chalk.red('Warning: multiple files exist with base name'),chalk.underline.bold.red(fileName))
-        }
-    })
-
+    var bundles  = files.filter(filter('*.js'));
     // object to hold all async operations
-    var promises = [];
-
-    // copy regular files 
-    /*promises.push(
-        Promise.all(includes.map(function(file){
-            return copyFile(file,path.join(destPath,path.basename(file)));
-        }))
-        .then(function(){
-            console.log(chalk.green.bold('✓ Non-bundle files copied'));
-        })
-    )*/
-    // minify files
-    promises.push(
-        Promise.all(includes.map(function(file){
-            return minify(file)
-        }))
-        .then(function(minified){
-            scripts.push(...minified);
-            console.log(chalk.green.bold('✓ Non-bundle files minified'));
-        })
-    )
     
     // bundle files
+    var promises = [];
     promises.push(
         Promise.all(bundles.map(function(file){
-                return bundle(file);
+                return bundle(path.join(srcPath,file));
         }))
         .then(function(bundles){
             scripts.push(...bundles);
             console.log(chalk.green.bold('✓ All files bundled!'));
         })
-
     );
     return Promise.all(promises);
 })
@@ -164,14 +128,15 @@ function minify(file){
 
 function bundle(file){
     return new Promise(function(resolve,reject){
-        var fileName = path.basename(file).replace('.bundle.js','.min.js');
+        var fileName = path.basename(file).replace('.js','.min.js');
         console.log(chalk.dim('+ Creating'),chalk.dim.underline(fileName));
         // start browserify
         var browserify = new Browserify({debug:true});
         // add the entry file to the queue
         browserify.add(file)
         // add minifier / sourcemap generator
-        browserify.plugin('minifyify', {map: './'+fileName+'.map', minify:true}); 
+        var map = process.env.NODE_ENV === 'production' ? false : `./${fileName}.map`;
+        browserify.plugin('minifyify', {map: map, minify:true}); 
         // call the main bundle function
         browserify.bundle(function(err, src, map){
             if(err) reject(err);
