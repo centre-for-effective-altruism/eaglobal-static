@@ -1,0 +1,329 @@
+{
+  "policies": [
+    {
+      "effect": "allow",
+      "constraint": {
+        "and": [
+          {
+            "equals": [
+              {
+                "doc": "sys.type"
+              },
+              "Entry"
+            ]
+          },
+          {
+            "equals": [
+              {
+                "doc": "sys.contentType.sys.id"
+              },
+              "event"
+            ]
+          }
+        ]
+      },
+      "actions": [
+        "read"
+      ]
+    },
+    {
+      "effect": "allow",
+      "constraint": {
+        "and": [
+          {
+            "equals": [
+              {
+                "doc": "sys.type"
+              },
+              "Entry"
+            ]
+          },
+          {
+            "equals": [
+              {
+                "doc": "sys.id"
+              },
+              "<%DOCUMENTID%>"
+            ]
+          },
+          {
+            "paths": [
+              {
+                "doc": "fields.%.%"
+              }
+            ]
+          }
+        ]
+      },
+      "actions": [
+        "update"
+      ]
+    },
+    {
+      "effect": "allow",
+      "constraint": {
+        "and": [
+          {
+            "equals": [
+              {
+                "doc": "sys.type"
+              },
+              "Entry"
+            ]
+          },
+          {
+            "equals": [
+              {
+                "doc": "sys.id"
+              },
+              "<%DOCUMENTID%>"
+            ]
+          }
+        ]
+      },
+      "actions": [
+        "publish"
+      ]
+    },
+    {
+      "effect": "allow",
+      "constraint": {
+        "and": [
+          {
+            "equals": [
+              {
+                "doc": "sys.type"
+              },
+              "Entry"
+            ]
+          },
+          {
+            "equals": [
+              {
+                "doc": "sys.createdBy.sys.id"
+              },
+              "User.current()"
+            ]
+          },
+          {
+            "equals": [
+              {
+                "doc": "sys.contentType.sys.id"
+              },
+              "event"
+            ]
+          }
+        ]
+      },
+      "actions": [
+        "publish",
+        "unpublish"
+      ]
+    },
+    {
+      "effect": "allow",
+      "constraint": {
+        "and": [
+          {
+            "equals": [
+              {
+                "doc": "sys.type"
+              },
+              "Entry"
+            ]
+          },
+          {
+            "equals": [
+              {
+                "doc": "sys.contentType.sys.id"
+              },
+              "speaker"
+            ]
+          }
+        ]
+      },
+      "actions": [
+        "read"
+      ]
+    },
+    {
+      "effect": "allow",
+      "constraint": {
+        "and": [
+          {
+            "equals": [
+              {
+                "doc": "sys.type"
+              },
+              "Entry"
+            ]
+          },
+          {
+            "equals": [
+              {
+                "doc": "sys.createdBy.sys.id"
+              },
+              "User.current()"
+            ]
+          }
+        ]
+      },
+      "actions": "all"
+    },
+    {
+      "effect": "allow",
+      "constraint": {
+        "and": [
+          {
+            "equals": [
+              {
+                "doc": "sys.type"
+              },
+              "Entry"
+            ]
+          },
+          {
+            "equals": [
+              {
+                "doc": "sys.contentType.sys.id"
+              },
+              "speaker"
+            ]
+          }
+        ]
+      },
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "effect": "allow",
+      "constraint": {
+        "and": [
+          {
+            "equals": [
+              {
+                "doc": "sys.type"
+              },
+              "Entry"
+            ]
+          },
+          {
+            "equals": [
+              {
+                "doc": "sys.contentType.sys.id"
+              },
+              "gallery"
+            ]
+          }
+        ]
+      },
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "effect": "allow",
+      "constraint": {
+        "and": [
+          {
+            "equals": [
+              {
+                "doc": "sys.type"
+              },
+              "Entry"
+            ]
+          },
+          {
+            "equals": [
+              {
+                "doc": "sys.contentType.sys.id"
+              },
+              "talk"
+            ]
+          }
+        ]
+      },
+      "actions": [
+        "create"
+      ]
+    },
+    {
+      "effect": "allow",
+      "constraint": {
+        "and": [
+          {
+            "equals": [
+              {
+                "doc": "sys.type"
+              },
+              "Asset"
+            ]
+          }
+        ]
+      },
+      "actions": [
+        "read"
+      ]
+    },
+    {
+      "effect": "allow",
+      "constraint": {
+        "and": [
+          {
+            "equals": [
+              {
+                "doc": "sys.type"
+              },
+              "Asset"
+            ]
+          },
+          {
+            "equals": [
+              {
+                "doc": "sys.createdBy.sys.id"
+              },
+              "User.current()"
+            ]
+          }
+        ]
+      },
+      "actions": "all"
+    }
+  ],
+  "permissions": {
+    "ContentModel": [
+      "read"
+    ],
+    "Settings": [],
+    "ContentDelivery": []
+  },
+  "sys": {
+    "type": "Role",
+    "id": "7FSvQc5g4uQs5wdHwkSMhb",
+    "version": 1,
+    "space": {
+      "sys": {
+        "type": "Link",
+        "linkType": "Space",
+        "id": "70c29flvim3q"
+      }
+    },
+    "createdBy": {
+      "sys": {
+        "type": "Link",
+        "linkType": "User",
+        "id": "7r5sCWHN2Rq02voptWy0cI"
+      }
+    },
+    "createdAt": "2016-09-06T14:20:28Z",
+    "updatedBy": {
+      "sys": {
+        "type": "Link",
+        "linkType": "User",
+        "id": "7r5sCWHN2Rq02voptWy0cI"
+      }
+    },
+    "updatedAt": "2016-09-06T14:22:45Z"
+  }
+}
