@@ -101,13 +101,15 @@ contentful.space((space) => {
                 })
             )
             .then(() => {
-                const message = `${succesfullyCreatedRoleNames.length} new EAGx Editor role${succesfullyCreatedRoleNames.length>1?'s were':' was'} created (${succesfullyCreatedRoleNames.join(', ')})`;
-                slack.webhookAsync({
-                  channel: "#tech-notifications",
-                  username: "eag-role-bot",
-                  text: message,
-                  icon_emoji: ':bust_in_silhouette:'
-                });
+                if(succesfullyCreatedRoleNames.length){
+                    const message = `${succesfullyCreatedRoleNames.length} new EAGx Editor role${succesfullyCreatedRoleNames.length>1?'s were':' was'} created (${succesfullyCreatedRoleNames.join(', ')})`;
+                    slack.webhookAsync({
+                      channel: "#tech-notifications",
+                      username: "eag-role-bot",
+                      text: message,
+                      icon_emoji: ':bust_in_silhouette:'
+                    });
+                }
             })
         })
     })
