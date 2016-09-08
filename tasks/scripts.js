@@ -28,161 +28,161 @@ var builtPath = path.join(__dirname,'..','build','scripts')
 var scripts = [];
 
 new Promise(function(resolve,reject){
-	rm(destPath,function(err){
-		if(err) reject(err);
-		resolve();
-	})
+    rm(destPath,function(err){
+        if(err) reject(err);
+        resolve();
+    })
 })
 .then(function(){
-	return fs.mkdirAsync(destPath)
-	.catch(function(err){if(err.code !== 'EEXIST') throw err})
+    return fs.mkdirAsync(destPath)
+    .catch(function(err){if(err.code !== 'EEXIST') throw err})
 })
 .then(function(){ return recursive(path.join(srcPath))})
 .then(function(files){
-	
-	// split files into includes and bundles
-	var includes = files.filter(filter('**/includes/**/*.js'));
-	var bundles  = files.filter(filter('**/*.bundle.js'));
-	
-	// error check to make sure we don't have any filename collisions
-	var fileNames = [];
-	[...includes,...bundles].map(function(file){
-		return path.basename(file);
-	}).forEach(function(fileName){
-		if(fileNames.indexOf(fileName)===-1){
-			fileNames.push(fileName);
-		} else {
-			console.error(chalk.red('Warning: multiple files exist with base name'),chalk.underline.bold.red(fileName))
-		}
-	})
+    
+    // split files into includes and bundles
+    var includes = files.filter(filter('**/includes/**/*.js'));
+    var bundles  = files.filter(filter('**/*.bundle.js'));
+    
+    // error check to make sure we don't have any filename collisions
+    var fileNames = [];
+    [...includes,...bundles].map(function(file){
+        return path.basename(file);
+    }).forEach(function(fileName){
+        if(fileNames.indexOf(fileName)===-1){
+            fileNames.push(fileName);
+        } else {
+            console.error(chalk.red('Warning: multiple files exist with base name'),chalk.underline.bold.red(fileName))
+        }
+    })
 
-	// object to hold all async operations
-	var promises = [];
+    // object to hold all async operations
+    var promises = [];
 
-	// copy regular files 
-	/*promises.push(
-		Promise.all(includes.map(function(file){
-			return copyFile(file,path.join(destPath,path.basename(file)));
-		}))
-		.then(function(){
-			console.log(chalk.green.bold('✓ Non-bundle files copied'));
-		})
-	)*/
-	// minify files
-	promises.push(
-		Promise.all(includes.map(function(file){
-			return minify(file)
-		}))
-		.then(function(minified){
-			scripts.push(...minified);
-			console.log(chalk.green.bold('✓ Non-bundle files minified'));
-		})
-	)
-	
-	// bundle files
-	promises.push(
-		Promise.all(bundles.map(function(file){
-				return bundle(file);
-		}))
-		.then(function(bundles){
-			scripts.push(...bundles);
-			console.log(chalk.green.bold('✓ All files bundled!'));
-		})
+    // copy regular files 
+    /*promises.push(
+        Promise.all(includes.map(function(file){
+            return copyFile(file,path.join(destPath,path.basename(file)));
+        }))
+        .then(function(){
+            console.log(chalk.green.bold('✓ Non-bundle files copied'));
+        })
+    )*/
+    // minify files
+    promises.push(
+        Promise.all(includes.map(function(file){
+            return minify(file)
+        }))
+        .then(function(minified){
+            scripts.push(...minified);
+            console.log(chalk.green.bold('✓ Non-bundle files minified'));
+        })
+    )
+    
+    // bundle files
+    promises.push(
+        Promise.all(bundles.map(function(file){
+                return bundle(file);
+        }))
+        .then(function(bundles){
+            scripts.push(...bundles);
+            console.log(chalk.green.bold('✓ All files bundled!'));
+        })
 
-	);
-	return Promise.all(promises);
+    );
+    return Promise.all(promises);
 })
 .then(function(){
-	console.log(chalk.dim('Writing files to destination directory...'));
-	return Promise.all(scripts.map(function(script){
-		return Promise.all([
-			fs.writeFileAsync(path.join(destPath,script.fileName), script.src),
-			fs.writeFileAsync(path.join(destPath,script.fileName+'.map'), script.map)
-		])
-	}))
-	.then(function(){
-		console.log(chalk.green.bold('✓ All files written!'))
-	})
+    console.log(chalk.dim('Writing files to destination directory...'));
+    return Promise.all(scripts.map(function(script){
+        return Promise.all([
+            fs.writeFileAsync(path.join(destPath,script.fileName), script.src),
+            fs.writeFileAsync(path.join(destPath,script.fileName+'.map'), script.map)
+        ])
+    }))
+    .then(function(){
+        console.log(chalk.green.bold('✓ All files written!'))
+    })
 })
 .then(function(cleaned){
-	return fs.existsAsync(builtPath)
-	.then(function(){
-		return new Promise(function(resolve,reject){
-			cp(destPath,builtPath,function(err){
-				if(err) reject(err);
-				resolve();
-			})
-		})
-	})
-	.then(function(){
-		console.log(chalk.green.bold('✓ Files copied to build directory!'));
-	})
-	.catch(function(err){
-		if(err.length === 1 && err[0].code==='ENOENT'){
-			// no build directory, don't bother doing anything
-		} else {
-			throw err;
-		}
-	})
+    return fs.existsAsync(builtPath)
+    .then(function(){
+        return new Promise(function(resolve,reject){
+            cp(destPath,builtPath,function(err){
+                if(err) reject(err);
+                resolve();
+            })
+        })
+    })
+    .then(function(){
+        console.log(chalk.green.bold('✓ Files copied to build directory!'));
+    })
+    .catch(function(err){
+        if(err.length === 1 && err[0].code==='ENOENT'){
+            // no build directory, don't bother doing anything
+        } else {
+            throw err;
+        }
+    })
 })
 .catch(function(err){
-	throw err;
+    throw err;
 })
 
 
 function recursive(directory){
-	return new Promise(function(resolve,reject){
-		recursiveReaddir(directory, function(err,files){
-			if(err) reject(err);
-			resolve(files);
-		})
-	})
+    return new Promise(function(resolve,reject){
+        recursiveReaddir(directory, function(err,files){
+            if(err) reject(err);
+            resolve(files);
+        })
+    })
 }
 
 function minify(file){
-	return new Promise(function(resolve,reject){
-		
-		var fileName = path.basename(file).replace('.js','.min.js');
-		console.log(chalk.dim('+ Creating'),chalk.dim.underline(fileName));
-		try {
-			var minified = uglify.minify(file,{
-				outSourceMap: './'+fileName+'.map'
-			});
-		} catch(e){
-			reject(e);
-		}
+    return new Promise(function(resolve,reject){
+        
+        var fileName = path.basename(file).replace('.js','.min.js');
+        console.log(chalk.dim('+ Creating'),chalk.dim.underline(fileName));
+        try {
+            var minified = uglify.minify(file,{
+                outSourceMap: './'+fileName+'.map'
+            });
+        } catch(e){
+            reject(e);
+        }
 
-		console.log(chalk.green.dim('✓ Created'),chalk.dim.underline(fileName));
-		resolve({
-			src: Buffer.from(minified.code),
-			map: Buffer.from(minified.map),
-			fileName
-		})
-	})
+        console.log(chalk.green.dim('✓ Created'),chalk.dim.underline(fileName));
+        resolve({
+            src: Buffer.from(minified.code),
+            map: Buffer.from(minified.map),
+            fileName
+        })
+    })
 
 }
 
 function bundle(file){
-	return new Promise(function(resolve,reject){
-		var fileName = path.basename(file).replace('.bundle.js','.min.js');
-		console.log(chalk.dim('+ Creating'),chalk.dim.underline(fileName));
-	    // start browserify
-	    var browserify = new Browserify({debug:true});
-	    // add the entry file to the queue
-	    browserify.add(file)
-	    // add minifier / sourcemap generator
-	    browserify.plugin('minifyify', {map: './'+fileName+'.map', minify:true}); 
-	    // call the main bundle function
-	    browserify.bundle(function(err, src, map){
-	        if(err) reject(err);
-	        console.log(chalk.green.dim('✓ Created'),chalk.dim.underline(fileName));
-	        resolve({
-	        	src: src,
-	        	map: map,
-	        	fileName
-	        })
-	    })
-	})
+    return new Promise(function(resolve,reject){
+        var fileName = path.basename(file).replace('.bundle.js','.min.js');
+        console.log(chalk.dim('+ Creating'),chalk.dim.underline(fileName));
+        // start browserify
+        var browserify = new Browserify({debug:true});
+        // add the entry file to the queue
+        browserify.add(file)
+        // add minifier / sourcemap generator
+        browserify.plugin('minifyify', {map: './'+fileName+'.map', minify:true}); 
+        // call the main bundle function
+        browserify.bundle(function(err, src, map){
+            if(err) reject(err);
+            console.log(chalk.green.dim('✓ Created'),chalk.dim.underline(fileName));
+            resolve({
+                src: src,
+                map: map,
+                fileName
+            })
+        })
+    })
 }
 
 
@@ -193,8 +193,8 @@ function copyFile(source, target) {
         var wr = fs.createWriteStream(target);
         wr.on('error', reject);
         wr.on('finish', function(){
-	        console.log(chalk.green.dim('✓ Copied'),chalk.dim.underline(path.basename(target)));
-			resolve();
+            console.log(chalk.green.dim('✓ Copied'),chalk.dim.underline(path.basename(target)));
+            resolve();
         });
         rd.pipe(wr);
     });
