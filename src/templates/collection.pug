@@ -1,6 +1,30 @@
 extends ./layout
 	
 block content
+	//- Sort / Search / Filter
+	- showSearch = false
+	if slug === 'talks'
+		- showSearch = true
+	
+	if showSearch
+		.search-wrapper
+			section.section.divider
+				form.form.search-form
+					.input-group
+						input.form-control.search-form-text-input
+			script(data-search-file='/talks/talks.json').
+				loadScript('search');
+				loadScript(function(){
+					console.log('Calling...');
+					(function($){
+						$.fn.searchFactory({
+							tags: ['speakers','tags']
+						});
+					}(jQuery))
+				})
+			
+				
+
 	//- Files
 	include ./components/cards
 	- var perRow = 4
@@ -42,12 +66,13 @@ block content
 								.col-sm-6.col-md-3
 									+card(item,cardOpts)
 	else
-		each i, index in pagination.files
-			if index%perRow === 0
-				.row
-					each item in pagination.files.slice(index,index+perRow)
-						.col-sm-6.col-md-3
-							+card(item,cardOpts)
+		section.section-divider
+			each i, index in pagination.files
+				if index%perRow === 0
+					.row
+						each item in pagination.files.slice(index,index+perRow)
+							.col-sm-6.col-md-3
+								+card(item,cardOpts)
 
 	section.section-divider
 		//- Pagination

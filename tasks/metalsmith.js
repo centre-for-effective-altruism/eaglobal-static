@@ -39,9 +39,10 @@ var parseHTML = require('../lib/parseHTML').parse;
 var shortcodes = require('metalsmith-shortcodes');
 var concat = require('metalsmith-concat');
 var icons = require('metalsmith-icons');
+
 // var feed = require('metalsmith-feed');
-var headingsIdentifier = require('metalsmith-headings-identifier');
-var headings = require('metalsmith-headings');
+// var headingsIdentifier = require('metalsmith-headings-identifier');
+// var headings = require('metalsmith-headings');
 var striptags = require('striptags');
 var htmlEntities = require('html-entities').Html5Entities;
 // templating utility functions
@@ -519,6 +520,7 @@ function build(buildCount){
 
         })
         .use(logMessage('Built series hierarchy'))
+        
         // .use(function (files, metalsmith, done) {
         //     var talks = metalsmith.metadata().collections['talks'];
         //     talks.forEach(function(talk){
@@ -544,72 +546,86 @@ function build(buildCount){
         .use(logMessage('Converted Markdown to HTML'))
         .use(function (files, metalsmith, done) {
             // certain content has been incorporated into other pages, but we don't need them as standalone pages in our final build.
-            Object.keys(files).filter(minimatch.filter('@(series|quotations|links|books|media-items)/**')).forEach(function(file){
+            Object.keys(files).filter(minimatch.filter('@(series|tags|links)/**')).forEach(function(file){
                 delete files[file];
             });
             done();
         })
         .use(shortcodes(shortcodeOpts))
         .use(logMessage('Converted Shortcodes'))
-        .use(branch(function(filename,props){
+        // .use(branch(function(filename,props){
 
-                return props.collection && (
-                    props.collection.indexOf('pages')    > -1 ||
-                    props.collection.indexOf('articles') > -1
-                );
-            })
-            .use(headingsIdentifier({
-                linkTemplate: '<a class="heading-permalink" href="#%s"><span></span></a>'
-            }))
-            .use(headings({
-                selectors: ['h2,h3,h4']
-            }))
-            .use(logMessage('Created TOCs'))
-        )
+        //         return props.collection && (
+        //             props.collection.indexOf('pages')    > -1 ||
+        //             props.collection.indexOf('articles') > -1
+        //         );
+        //     })
+        //     .use(headingsIdentifier({
+        //         linkTemplate: '<a class="heading-permalink" href="#%s"><span></span></a>'
+        //     }))
+        //     .use(headings({
+        //         selectors: ['h2,h3,h4']
+        //     }))
+        //     .use(logMessage('Created TOCs'))
+        // )
+        // .use(function (files, metalsmith, done) {
+        //     // update shortcodes we haven't processed yet because they don't
+        //     var shortcodes = ['toc'];
+        //     var re = new RegExp('\\[('+shortcodes.join('|')+').*?\\]','gim');
+        //     Object.keys(files).filter(minimatch.filter('**/index.html')).forEach(function(file){
+        //         files[file].contents = files[file].contents.toString().replace(re,function(match,shortcode){
+        //             return match.replace(shortcode,shortcode+'-parsed');
+        //         });
+        //     });
+        //     done();
+        // })
+        // .use(shortcodes(shortcodeOpts))
+        // .use(logMessage('Converted Shortcodes (2nd pass)'))
+        // .use(function (files, metalsmith, done) {
+        //     // create matching JSON files for each piece of content
+        //     Object.keys(files).filter(minimatch.filter('**/index.html')).forEach(function(file){
+                
+        //         var jsonfile = file!=='index.html' ? file.replace('/index.html','.json') : 'index.json';
+                
+        //         var json = {};
+        //         var fields = [
+        //             'contents',
+        //             'id',
+        //             'contentType',
+        //             'title',
+        //             'slug',
+        //             'path',
+        //             'excerpt',
+        //             'headings',
+        //             'date',
+        //             'updated'
+        //         ];
+        //         fields.forEach(function(field){
+        //             if(files[file][field]){
+        //                 json[field] = files[file][field];
+        //             }
+        //         });
+        //         json.contents = json.contents ? json.contents.toString() : '';
+        //         files[jsonfile] = {contents:JSON.stringify(json)};
+        //     });
+
+        //     done();
+
+        // })
         .use(function (files, metalsmith, done) {
-            // update shortcodes we haven't processed yet because they don't
-            var shortcodes = ['toc'];
-            var re = new RegExp('\\[('+shortcodes.join('|')+').*?\\]','gim');
-            Object.keys(files).filter(minimatch.filter('**/index.html')).forEach(function(file){
-                files[file].contents = files[file].contents.toString().replace(re,function(match,shortcode){
-                    return match.replace(shortcode,shortcode+'-parsed');
-                });
-            });
+            // serialize all talks into a searchable object
+            var talks = metalsmith.metadata().collections['talks'].map((talk) => ({
+                id: talk.id,
+                title: talk.title,
+                canonical: talk.canonical,
+                thumbnail: talk.thumbnail ? contentfulImage(talk.thumbnail) : '',
+                speakers: talk.speakers ? talk.speakers.map( (s) => metalsmith.metadata().fileIDMap[s.sys.id].title) : false,
+                tags: talk.tags ? talk.tags.map( (t) => metalsmith.metadata().fileIDMap[t.sys.id].title) : false
+            }));
+            files['talks/talks.json'] = {contents: new Buffer(JSON.stringify(talks)) }
             done();
         })
-        .use(shortcodes(shortcodeOpts))
-        .use(logMessage('Converted Shortcodes (2nd pass)'))
-        .use(function (files, metalsmith, done) {
-            // create matching JSON files for each piece of content
-            Object.keys(files).filter(minimatch.filter('**/index.html')).forEach(function(file){
-                
-                var jsonfile = file!=='index.html' ? file.replace('/index.html','.json') : 'index.json';
-                
-                var json = {};
-                var fields = [
-                    'contents',
-                    'id',
-                    'contentType',
-                    'title',
-                    'slug',
-                    'path',
-                    'excerpt',
-                    'headings',
-                    'date',
-                    'updated'
-                ];
-                fields.forEach(function(field){
-                    if(files[file][field]){
-                        json[field] = files[file][field];
-                    }
-                });
-                json.contents = json.contents ? json.contents.toString() : '';
-                files[jsonfile] = {contents:JSON.stringify(json)};
-            });
-
-            done();
-
-        })
+        .use(logMessage('Built search index'))
         .use(function (files, metalsmith, done) {
             // copy 'template' key to 'layout' key
             Object.keys(files).filter(minimatch.filter('{**/index.html,404.html}')).forEach(function(file){

@@ -28,6 +28,7 @@
   "dependencies": {
     "async": "^2.0.0-rc.6",
     "autolinker": "^0.26.0",
+    "bootstrap-3-typeahead": "^4.0.1",
     "bootstrap-sass": "^3.3.6",
     "browser-cookies": "^1.0.8",
     "browserify": "^13.0.1",
@@ -83,6 +84,7 @@
     "node-sass": "^3.8.0",
     "numeral": "^1.5.3",
     "pug": "^2.0.0-beta4",
+    "pugify": "^1.0.5",
     "purify-css": "^1.1.9",
     "recursive-readdir": "^2.0.0",
     "rimraf": "^2.5.2",
@@ -114,29 +116,12 @@
     "bootstrapTransition": "./node_modules/bootstrap-sass/assets/javascripts/bootstrap/transition.js",
     "bootstrapModal": "./node_modules/bootstrap-sass/assets/javascripts/bootstrap/modal.js",
     "bootstrapTooltip": "./node_modules/bootstrap-sass/assets/javascripts/bootstrap/tooltip.js",
-    "bootstrapAffix": "./node_modules/bootstrap-sass/assets/javascripts/bootstrap/affix.js",
-    "bootstrapScrollspy": "./node_modules/bootstrap-sass/assets/javascripts/bootstrap/scrollspy.js",
-    "gsap-tweenlite": "./node_modules/gsap/src/uncompressed/TweenLite.js",
-    "gsap-timelinelite": "./node_modules/gsap/src/uncompressed/TimelineLite.js",
-    "GSAPEasing": "./node_modules/gsap/src/uncompressed/easing/EasePack.js",
-    "GSAPCSSPlugin": "./node_modules/gsap/src/uncompressed/plugins/CSSPlugin.js",
-    "GSAPAttrPlugin": "./node_modules/gsap/src/uncompressed/plugins/AttrPlugin.js",
-    "GSAPScrollToPlugin": "./node_modules/gsap/src/uncompressed/plugins/ScrollToPlugin.js",
-    "scrollmagicJQuery": "./node_modules/scrollmagic/scrollmagic/uncompressed/plugins/jquery.ScrollMagic.js",
-    "scrollmagicAnimationGSAP": "./node_modules/scrollmagic/scrollmagic/uncompressed/plugins/animation.gsap.js",
-    "jquerySlabText": "./src/scripts/bundle/vendor/jquery.slabtext.js",
-    "throttleDebounce": "./node_modules/throttle-debounce/index.js",
-    "jqueryPulse": "./src/scripts/bundle/vendor/jquery.pulse.js",
-    "chartist": "./node_modules/chartist/dist/chartist.js",
-    "chartistAxisTitle": "./node_modules/chartist-plugin-axistitle/dist/chartist-plugin-axistitle.js",
-    "iframeResizer": "./node_modules/iframe-resizer/src/iframeResizer.js",
-    "main": "./src/scripts/bundle/main.js",
-    "analytics": "./src/scripts/bundle/analytics.js",
-    "newsletter": "./src/scripts/bundle/newsletter.js"
+    "bootstrapTypeahead": "./node_modules/bootstrap-3-typeahead/bootstrap3-typeahead.js"
   },
   "browserify": {
     "transform": [
-      "browserify-shim"
+      "browserify-shim",
+      "pugify"
     ]
   },
   "browserify-shim": {
@@ -148,14 +133,6 @@
     "bootstrapDropdown": "bootstrapDropdown",
     "bootstrapTransition": "bootstrapTransition",
     "bootstrapModal": "bootstrapModal",
-    "bootstrapTooltip": "bootstrapTooltip",
-    "bootstrapSlider": "bootstrapSlider",
-    "scrollmagicJQuery": "scrollmagicJQuery",
-    "scrollmagicAnimationGSAP": "scrollmagicAnimationGSAP",
-    "jquerySlabText": "jquerySlabText",
-    "iframeResizer": "iframeResizer",
-    "main": "main",
-    "analytics": "analytics",
-    "newsletter": "newsletter"
+    "bootstrapTypeahead": "bootstrapTypeahead"
   }
 }
