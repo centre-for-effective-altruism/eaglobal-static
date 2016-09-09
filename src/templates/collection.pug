@@ -1,27 +1,35 @@
 extends ./layout
 	
 block content
+	- var files = pagination ? pagination.files : files || [];
 	//- Sort / Search / Filter
 	- showSearch = false
-	if slug === 'talks'
+	if slug === 'talks' || slug === 'speakers'
 		- showSearch = true
+	if slug === 'talks'
+		- var searchCTA = "Search by talk title, speaker, or tag"
+		- var localSearchData = JSON.stringify(searchData.talks.concat(searchData.tags).concat(searchData.speakersWithTalks))
+	if slug === 'speakers'
+		- var searchCTA = "Search speakers"
+		- var localSearchData = JSON.stringify(searchData.speakers)
 	
 	if showSearch
-		.search-wrapper
-			section.section.divider
-				form.form.search-form
-					.input-group
-						input.form-control.search-form-text-input
-			script(data-search-file='/talks/talks.json').
-				loadScript('search');
-				loadScript(function(){
-					console.log('Calling...');
-					(function($){
-						$.fn.searchFactory({
-							tags: ['speakers','tags']
-						});
-					}(jQuery))
-				})
+		section.section-divider.section-search
+			.row
+				.col-md-8.col-md-offset-2
+					form.form.search-form
+						.form-group
+							label.sr-only(for='search-text')!= searchCTA
+							input.form-control.search-form-text-input(name='search-text' placeholder=searchCTA)
+		script.
+			loadScript('search');
+			loadScript(function(){
+				(function($){
+					$('.search-form-text-input').searchFactory({
+						data: !{localSearchData}
+					});
+				}(jQuery))
+			});
 			
 				
 
@@ -29,18 +37,20 @@ block content
 	include ./components/cards
 	- var perRow = 4
 	- var cardOpts = {}
-	if slug === 'talks'
-		- cardOpts.speakers = true
-		- cardOpts.event = true
-	if slug === 'speakers'
-		- cardOpts.website = false
-	if slug === 'events'
-		- cardOpts.location = false
-		- cardOpts.dates = true
-	if slug === 'events' && pagination.num === 1
+	// - talks
+	- cardOpts.speakers = true
+	- cardOpts.event = true
+	//- speakers
+	- cardOpts.website = false
+	//- events
+	- cardOpts.location = false
+	- cardOpts.dates = true
+	//- tags?
+
+	if slug === 'events' && pagination && pagination.num === 1
 		- var upcomingEvents = []
 		- var pastEvents = []
-		each event in pagination.files
+		each event in files
 			if !event.startDate || moment(event.startDate).isAfter(moment(),'day')
 				- upcomingEvents.push(event)
 			else
@@ -67,26 +77,26 @@ block content
 									+card(item,cardOpts)
 	else
 		section.section-divider
-			each i, index in pagination.files
+			each i, index in files
 				if index%perRow === 0
 					.row
-						each item in pagination.files.slice(index,index+perRow)
+						each item in files.slice(index,index+perRow)
 							.col-sm-6.col-md-3
 								+card(item,cardOpts)
 
-	section.section-divider
-		//- Pagination
-		nav.pagination-wrapper(aria-label='Page navigation')
-			ul.pagination
-				if pagination.previous
-					li
-						a(href=pagination.previous.canonical, aria-label='Previous')
-							span(aria-hidden='true') «
-				if pagination.pages.length > 1
-					each page,index in pagination.pages
+	if pagination && pagination.pages.length > 1
+		section.section-divider
+			//- Pagination
+			nav.pagination-wrapper(aria-label='Page navigation')
+				ul.pagination
+					if pagination.previous
+						li
+							a(href=pagination.previous.canonical, aria-label='Previous')
+								span(aria-hidden='true') «
+					each page,index in pagination.getPages(10)
 						li
 							a(href=page.canonical)!= index+1
-				if pagination.next
-					li
-						a(href=pagination.next.canonical, aria-label='Previous')
-							span(aria-hidden='true') »
+					if pagination.next
+						li
+							a(href=pagination.next.canonical, aria-label='Previous')
+								span(aria-hidden='true') »
