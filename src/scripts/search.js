@@ -54,7 +54,10 @@ $.fn.searchFactory = function( opts ) {
             textInput.typeahead({
                 source: options.data,
                 displayText: displayText,
-                afterSelect: openUrl
+                afterSelect: function(item){
+                    textInput.val('');
+                    openUrl(item);
+                }
             });
         } else {
             if(console !== 'undefined' && typeof console.error === 'function') {
