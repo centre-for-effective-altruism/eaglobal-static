@@ -13,7 +13,7 @@ if (process.env.NODE_ENV === 'development') {
 
 // Start the build!
 var chalk = require('chalk');
-message('Generating EffectiveAltruism.org!',chalk.cyan.inverse,true);
+message('Generating the EA Global website!',chalk.cyan.inverse,true);
 message('Initialising new build...',chalk.dim,true);
 // Metalsmith
 var Metalsmith = require('metalsmith');
@@ -39,9 +39,10 @@ var parseHTML = require('../lib/parseHTML').parse;
 var shortcodes = require('metalsmith-shortcodes');
 var concat = require('metalsmith-concat');
 var icons = require('metalsmith-icons');
+
 // var feed = require('metalsmith-feed');
-var headingsIdentifier = require('metalsmith-headings-identifier');
-var headings = require('metalsmith-headings');
+// var headingsIdentifier = require('metalsmith-headings-identifier');
+// var headings = require('metalsmith-headings');
 var striptags = require('striptags');
 var htmlEntities = require('html-entities').Html5Entities;
 // templating utility functions
@@ -287,7 +288,7 @@ function build(buildCount){
                     singular: 'event',
                 }
             },
-            'talks': {
+            talks: {
                 pattern: 'talks/**/index.html',
                 sortBy: function(a,b){
                     if(moment(a.event.fields.startDate).isBefore(moment(b.event.fields.startDate),'day')) return 1;
@@ -309,12 +310,19 @@ function build(buildCount){
                     singular: 'talk',
                 }
             },
-            'galleries': {
+            galleries: {
                 pattern: 'galleries/*/index.html',
                 sortBy: '',
                 reverse: true,
                 metadata: {
                     singular: 'gallery',
+                }
+            },
+            tags: {
+                pattern: 'tags/**/index.html',
+                sortBy: 'title',
+                metadata: {
+                    singular: 'tag',
                 }
             }
         }))
@@ -353,6 +361,18 @@ function build(buildCount){
                   title: 'Speakers',
                   slug: 'speakers',
                   contentType: 'speaker',
+                  collectionSlug: 'collection'
+                }
+            },
+            'collections.tags': {
+                perPage: 1000,
+                template: 'collection.pug',
+                first: 'tags/index.html',
+                path: 'tags/:num/index.html',
+                pageMetadata: {
+                  title: 'Tags',
+                  slug: 'tags',
+                  contentType: 'tag',
                   collectionSlug: 'collection'
                 }
             }
@@ -400,6 +420,12 @@ function build(buildCount){
                 var filePath = 'events/'+files[file].event.fields.slug+'/photos/index.html';
                 files[filePath] = files[file];
                 files[filePath].title = 'Photos';
+                delete files[file];
+            })
+            // move tags under talks
+            Object.keys(files).filter(minimatch.filter('tags/**')).forEach(function(file){
+                var filePath = 'talks/'+file;
+                files[filePath] = files[file];
                 delete files[file];
             })
             // hack to get eagx/organize into place
@@ -519,6 +545,7 @@ function build(buildCount){
 
         })
         .use(logMessage('Built series hierarchy'))
+        
         // .use(function (files, metalsmith, done) {
         //     var talks = metalsmith.metadata().collections['talks'];
         //     talks.forEach(function(talk){
@@ -544,72 +571,44 @@ function build(buildCount){
         .use(logMessage('Converted Markdown to HTML'))
         .use(function (files, metalsmith, done) {
             // certain content has been incorporated into other pages, but we don't need them as standalone pages in our final build.
-            Object.keys(files).filter(minimatch.filter('@(series|quotations|links|books|media-items)/**')).forEach(function(file){
+            Object.keys(files).filter(minimatch.filter('@(series|links)/**')).forEach(function(file){
                 delete files[file];
             });
             done();
         })
         .use(shortcodes(shortcodeOpts))
         .use(logMessage('Converted Shortcodes'))
-        .use(branch(function(filename,props){
-
-                return props.collection && (
-                    props.collection.indexOf('pages')    > -1 ||
-                    props.collection.indexOf('articles') > -1
-                );
+        .use(function (files, metalsmith, done) {
+            // serialize all talks/speakers/tags into a searchable object
+            var meta = metalsmith.metadata();
+            meta.searchData = {};
+            ['talks','speakers','tags'].forEach(function(contentType){
+                meta.searchData[contentType] = meta.collections[contentType].map((item) => ({
+                    name: item.title,
+                    canonical: item.canonical,
+                    type: meta.collections[contentType].metadata.singular
+                }));
+            });
+            // get another array which is only speakers with talks
+            var speakerIDs = [];
+            meta.collections['talks'].forEach(function(talk){
+                var ids = talk.speakers.map(function(speaker){
+                    return speaker.sys.id
+                });
+                speakerIDs = speakerIDs.concat(ids);
+            });
+            meta.searchData['speakersWithTalks'] = meta.collections['speakers']
+            .filter(function(speaker){
+                return speakerIDs.indexOf(speaker.id) > -1;
             })
-            .use(headingsIdentifier({
-                linkTemplate: '<a class="heading-permalink" href="#%s"><span></span></a>'
-            }))
-            .use(headings({
-                selectors: ['h2,h3,h4']
-            }))
-            .use(logMessage('Created TOCs'))
-        )
-        .use(function (files, metalsmith, done) {
-            // update shortcodes we haven't processed yet because they don't
-            var shortcodes = ['toc'];
-            var re = new RegExp('\\[('+shortcodes.join('|')+').*?\\]','gim');
-            Object.keys(files).filter(minimatch.filter('**/index.html')).forEach(function(file){
-                files[file].contents = files[file].contents.toString().replace(re,function(match,shortcode){
-                    return match.replace(shortcode,shortcode+'-parsed');
-                });
-            });
+            .map((item) => ({
+                name: item.title,
+                canonical: item.canonical,
+                type: meta.collections['speakers'].metadata.singular
+            }));
             done();
         })
-        .use(shortcodes(shortcodeOpts))
-        .use(logMessage('Converted Shortcodes (2nd pass)'))
-        .use(function (files, metalsmith, done) {
-            // create matching JSON files for each piece of content
-            Object.keys(files).filter(minimatch.filter('**/index.html')).forEach(function(file){
-                
-                var jsonfile = file!=='index.html' ? file.replace('/index.html','.json') : 'index.json';
-                
-                var json = {};
-                var fields = [
-                    'contents',
-                    'id',
-                    'contentType',
-                    'title',
-                    'slug',
-                    'path',
-                    'excerpt',
-                    'headings',
-                    'date',
-                    'updated'
-                ];
-                fields.forEach(function(field){
-                    if(files[file][field]){
-                        json[field] = files[file][field];
-                    }
-                });
-                json.contents = json.contents ? json.contents.toString() : '';
-                files[jsonfile] = {contents:JSON.stringify(json)};
-            });
-
-            done();
-
-        })
+        .use(logMessage('Built search index'))
         .use(function (files, metalsmith, done) {
             // copy 'template' key to 'layout' key
             Object.keys(files).filter(minimatch.filter('{**/index.html,404.html}')).forEach(function(file){

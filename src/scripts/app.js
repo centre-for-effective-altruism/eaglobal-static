@@ -31,14 +31,16 @@ global.cookies = require('browser-cookies');
 global.lazySizes = require('lazysizes');
 require('lazysizesRespImg');
 require('lazysizesBGSet');
+
 // bootstrap javascript plugins
-require('bootstrapDropdown');
+
+// require('bootstrapDropdown');
 require('bootstrapCollapse');
 require('bootstrapTransition');
-require('bootstrapAffix');
-require('bootstrapScrollspy');
+// require('bootstrapAffix');
+// require('bootstrapScrollspy');
 require('bootstrapModal')
-require('bootstrapTooltip')
+// require('bootstrapTooltip')
 // third party bootstrap plugins
 // inject breakpoints into the global scope so we can use them elsewhere
 global.breakpoints = {
@@ -61,23 +63,21 @@ global.breakpoints = {
 // require('scrollmagicJQuery')
 // require('scrollmagicAnimationGSAP')
 
-global.debounce = require('throttleDebounce').debounce;
-
 // jQuery Plugins
 // global.iFrameResize = require('iframeResizer');
 
 // form/data validation library
-global.validate = require('validate.js');
+
 
 // number formatting
-global.numeral = require('numeral');
+// global.numeral = require('numeral');
 
 // exit intent plugin
 // global.ouibounce = require('ouibounce')
 
 // main app scripts
-require('main');
-require('analytics');
-require('newsletter');
+require('./lib/main');
+require('./lib/analytics');
+// require('./lib/newsletter');
 
 

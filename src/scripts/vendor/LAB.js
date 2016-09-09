@@ -3,7 +3,7 @@
     MIT License
 */
 
-(function(global){
+
     var _$LAB = global.$LAB,
     
         // constants for the valid keys of the options object
@@ -489,101 +489,5 @@
     }
 
     // create the main instance of $LAB
-    global.$LAB = create_sandbox();
+    module.exports = create_sandbox();
 
-
-    /* The following "hack" was suggested by Andrea Giammarchi and adapted from: http://webreflection.blogspot.com/2009/11/195-chars-to-help-lazy-loading.html
-       NOTE: this hack only operates in FF and then only in versions where document.readyState is not present (FF < 3.6?).
-       
-       The hack essentially "patches" the **page** that LABjs is loaded onto so that it has a proper conforming document.readyState, so that if a script which does 
-       proper and safe dom-ready detection is loaded onto a page, after dom-ready has passed, it will still be able to detect this state, by inspecting the now hacked 
-       document.readyState property. The loaded script in question can then immediately trigger any queued code executions that were waiting for the DOM to be ready. 
-       For instance, jQuery 1.4+ has been patched to take advantage of document.readyState, which is enabled by this hack. But 1.3.2 and before are **not** safe or 
-       fixed by this hack, and should therefore **not** be lazy-loaded by script loader tools such as LABjs.
-    */ 
-    (function(addEvent,domLoaded,handler){
-        if (document.readyState == null && document[addEvent]){
-            document.readyState = "loading";
-            document[addEvent](domLoaded,handler = function(){
-                document.removeEventListener(domLoaded,handler,false);
-                document.readyState = "complete";
-            },false);
-        }
-    })("addEventListener","DOMContentLoaded");
-
-})(this);
-
-/**********************
- =====================
-APPLICATION LOAD QUEUE
- =====================
-***********************/
-
-(function(window,document){
-    window.appScript = document.getElementById('app-script').src;
-    window.$LAB = window.$LAB || undefined;
-    (function($LAB){
-        if(!$LAB) return;
-        // labjs script loader
-        $LAB
-        .queueScript("https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js")
-        // uncomment if running optimizely experiments:
-        /*.queueScript("https://cdn.optimizely.com/js/XXXXXX.js")
-        .queueWait(function(){
-            // kill optimizely if it hasn't loaded within a few seconds
-            function optimizelyTimeout() {
-                window.optimizely = window.optimizely|| [];
-                if (!window.optimizely.data) {
-                    window.optimizely.push("timeout");
-                }
-            }
-            setTimeout(optimizelyTimeout, 2000);
-        })*/
-        .queueScript("https://ajax.googleapis.com/ajax/libs/webfont/1.5.18/webfont.js")
-        .queueWait(function(){
-            function webfontStatus(status){
-                (function($){
-                    if (status){
-                        $(function(){
-                            $(document).trigger('WebFont',status)
-                        })
-                    }
-                })(jQuery)
-            }
-            WebFont.load({
-                timeout: 1000,
-                classes: !window.wfInactive,
-                google: {
-                    families: ['Merriweather:300,300i,700,700i','Raleway:500,500i']
-                },
-                loading: function(){
-                    clearTimeout(window.wfl);
-                    webfontStatus('loading');
-                },
-                active: function() {
-                    webfontStatus('active');
-                },
-                inactive: function() {
-                    webfontStatus('inactive');
-                }
-            });
-        })
-        .queueScript(window.appScript || '/scripts/app.min.js')
-        // enqueue anything that's been requested with loadScript() elsewhere in the body
-        var s;
-        for (var i = 0; i < d.length; i++) {
-            if(typeof d[i] === 'function'){
-                $LAB.queueWait(d[i])
-            } else {
-                s = d[i].substr(d[i].length-4) === '.js' || d[i].substr(0,4) === "http" ? d[i] : '/scripts/includes/'+d[i]+'.min.js';
-                $LAB.queueScript(s)
-            }
-        };
-        $LAB.queueWait(function(){
-            (function($){
-                $(document).trigger('jsready');
-            })(jQuery);
-        })
-        $LAB.runQueue();
-    })(window.$LAB);
-})(window, document);

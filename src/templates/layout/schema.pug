@@ -36,7 +36,7 @@ meta(property="og:site_name" content=site.title)
 
 //- OG Image tags info
 - defaultLogo = eagLogo
-if breadcrumb_path && breadcrumb_path.length && breadcrumb_path[0].file.slug === 'eagx'
+if breadcrumb_path && breadcrumb_path.length && breadcrumb_path[0].file && breadcrumb_path[0].file.slug === 'eagx'
 	- defaultLogo = eagXLogo
 
 - var ogImageURL = false
