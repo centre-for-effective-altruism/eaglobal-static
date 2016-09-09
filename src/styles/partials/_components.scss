@@ -89,11 +89,12 @@ span {
 		content: ' ';
 		border-top: 1px solid #CCC;
 		width: 50%;
-		margin: $grid-gutter-width auto;
 		display: block;
+		margin: auto;
 	}
 }
 .section-divider,.section-no-divider {
+	margin: $grid-gutter-width auto;
 	h2 {
 		text-align: center;
 		margin: $grid-gutter-width 0;
