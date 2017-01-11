@@ -3,7 +3,7 @@ title: Tags
 contentful:
   content_type: tag
   entry_template: tag.pug
-  entry_filename_pattern: tags/:fields.slug
-  permalink_style: true
+  entry_filename_pattern: tags/${fields.slug}
+  create_permalinks: true
   order: fields.title
 ---

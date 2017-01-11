@@ -4,5 +4,5 @@ contentful:
   content_type: gallery
   entry_template: gallery.pug
   entry_filename_pattern: galleries/:sys.id
-  permalink_style: true
+  create_permalinks: true
 ---

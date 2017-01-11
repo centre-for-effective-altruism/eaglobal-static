@@ -171,7 +171,7 @@ function build(buildCount){
             /*eslint-disable */
             var defaults = {
                 space_id: process.env.CONTENTFUL_SPACE, 
-                limit: 2000,
+                limit: 1000,
                 permalink_style: true
             };
             /*eslint-enable */
@@ -185,7 +185,7 @@ function build(buildCount){
         })
         .use(logMessage('Prepared global metadata'))
         .use(contentful({ 
-            'accessToken' : process.env.CONTENTFUL_ACCESS_TOKEN 
+            'access_token' : process.env.CONTENTFUL_ACCESS_TOKEN 
         }))
         .use(function (files,metalsmith,done){
             // get rid of the contentful source files from the build
@@ -429,8 +429,10 @@ function build(buildCount){
                 delete files[file];
             })
             // hack to get eagx/organize into place
-            files['eagx/organize/index.html'] = files['organize-eagx/index.html'];
-            delete files['organize-eagx/index.html'];
+            if (files['organize-eagx/index.html']) {
+                files['eagx/organize/index.html'] = files['organize-eagx/index.html'];
+                delete files['organize-eagx/index.html'];
+            }
             done();
         })
         .use(logMessage('Moved files into place'))

@@ -3,7 +3,7 @@ title: Talks
 contentful:
   content_type: talk
   entry_template: talk.pug
-  entry_filename_pattern: talks/:fields.slug
-  permalink_style: true
+  entry_filename_pattern: talks/${fields.slug}
+  create_permalinks: true
   order: fields.title
 ---
