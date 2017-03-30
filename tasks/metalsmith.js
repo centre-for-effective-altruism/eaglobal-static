@@ -33,6 +33,7 @@ var collections  = require('metalsmith-collections');
 var excerpts = require('metalsmith-excerpts');
 var pagination = require('metalsmith-pagination');
 var navigation = require('metalsmith-navigation');
+var hierarchy = require('../lib/create-content-hierarchy')
 message('Loaded metadata');
 // static file compilation
 var parseHTML = require('../lib/parseHTML').parse;
@@ -395,6 +396,18 @@ function build(buildCount){
             });
             done();
         })
+        .use(function (files, metalsmith, done) {
+            // create a lookup table of contentful data IDs and metalsmith files
+            metalsmith.metadata().fileIDMap = {};
+            var fileIDMap = metalsmith.metadata().fileIDMap;
+            Object.keys(files).filter(minimatch.filter('**/*.html')).forEach(function(file){
+                if (files[file].id) {
+                    fileIDMap[files[file].id] = files[file];
+                }
+            });
+            done();
+        })
+        .use(hierarchy())
         .use(function (files,metalsmith,done){
             // move pages from /pages/ into site root
             Object.keys(files).filter(minimatch.filter('pages/**/index.html')).forEach(function(file){
@@ -486,18 +499,6 @@ function build(buildCount){
             done();
         })
         .use(logMessage('Calculated redirects'))   
-        // parse 'series' hierarchy to use file objects from the build
-        .use(function (files, metalsmith, done) {
-            // create a lookup table of contentful data IDs and metalsmith files
-            metalsmith.metadata().fileIDMap = {};
-            var fileIDMap = metalsmith.metadata().fileIDMap;
-            Object.keys(files).filter(minimatch.filter('**/*.html')).forEach(function(file){
-                if (files[file].id) {
-                    fileIDMap[files[file].id] = files[file];
-                }
-            });
-            done();
-        })
         .use(function (files, metalsmith, done) {
             var defaultItem = {
                 file: {},
