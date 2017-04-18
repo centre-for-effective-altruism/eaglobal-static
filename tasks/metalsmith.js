@@ -449,9 +449,6 @@ function build(buildCount){
             done();
         })
         .use(logMessage('Moved files into place'))
-        // .use(function (files,metalsmith,done){
-        //     console.log(Object.keys(files))
-        // })
         .use(function (files,metalsmith,done){
             // add paths to HTML files
             Object.keys(files).filter(minimatch.filter('**/*.html')).forEach(function(file){
