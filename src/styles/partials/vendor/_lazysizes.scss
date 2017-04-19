@@ -15,3 +15,6 @@ img[data-sizes="auto"] {
     opacity: 1;
     transition: opacity 300ms;
 }
+.no-js .lazyload {
+  opacity: 1;
+}
