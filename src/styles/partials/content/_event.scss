@@ -22,6 +22,10 @@ body.event {
 	color: #999;
 }
 
+.event-details-application-link {
+	margin: $grid-gutter-width 0;
+}
+
 .event-talks-talk {
 	.embed-link-title {
 		@media(min-width: $screen-sm) {

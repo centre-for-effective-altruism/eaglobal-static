@@ -17,6 +17,7 @@ mixin card(item, opts)
 		if item.contentType === 'event'
 			- var showLocation = options.location || false
 			- var showDates = options.dates === false ? false : true
+			- var showApplicationLink = !!options.applicationLink
 			- thumbnailField = 'featuredImage'
 		if item.contentType === 'speaker'
 			- var showJobTitle = options.jobTitle === false ? false : true
@@ -70,6 +71,9 @@ mixin card(item, opts)
 					if showLocation
 						.card-event-location
 							+formatEventLocation(item)
+					if showApplicationLink && item.applicationLink
+						.card-event-application-link
+							a.btn.btn-primary.btn-block(href=item.applicationLink) Apply now!
 				if item.contentType === 'speaker'
 					if showJobTitle
 						include ../helpers/job-title

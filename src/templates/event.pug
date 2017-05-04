@@ -17,15 +17,22 @@ block content
 				+formatEventDates()
 			.event-details-location
 				+formatEventLocation()
-		if description && contactEmail
+			if applicationLink
+				.event-details-application-link
+					.row
+						.col-sm-6.col-sm-offset-3.col-md-4.col-md-offset-4
+							a.btn.btn-primary.btn-block(href=applicationLink) Apply now!
+		if description || contactEmail
 			section.event-basic-info.section-divider
-				if description
-					.event-basic-info-description
-						!= contents
-				if moment(endDate).add(14,'days').isAfter(moment(),'day') && contactEmail
-					.event-basic-info-contact
-						| For more information email 
-						a(href=contactEmail)!= contactEmail
+				.row
+					.col-lg-10.col-lg-offset-1.col-md-8.col-md-offset-2
+						if description
+							.event-basic-info-description
+								!= contents
+						if moment(endDate).add(14,'days').isAfter(moment(),'day') && contactEmail
+							.event-basic-info-contact
+								| For more information email 
+								a(href=contactEmail)!= contactEmail
 		//- Get all Speakers associated with this event
 		if featuredSpeakers && featuredSpeakers.length > 0
 			section.event-speakers.section-divider

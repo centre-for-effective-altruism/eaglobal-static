@@ -1,0 +1,17 @@
+- var featuredEvents = events.filter(event => event.featuredEvent).slice(0, 3)
+if featuredEvents && featuredEvents.length
+  - featuredEvents.sort((a,b) => a.date > b.date)
+  .row
+    - var cardWrapperClasses = []
+    include ../components/cards
+    each event, index in featuredEvents
+      case featuredEvents.length
+        when 2
+          - cardWrapperClasses = ['col-sm-6']
+        when 3
+          if index === 0
+            - cardWrapperClasses = ['col-sm-12']
+          else
+            - cardWrapperClasses = ['col-sm-6']
+      div(class=cardWrapperClasses)
+        +card(event, {applicationLink: true})
