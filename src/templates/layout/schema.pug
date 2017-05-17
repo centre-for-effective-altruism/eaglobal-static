@@ -19,7 +19,7 @@ mixin ogImageTags(contentfulImageURL)
 //- OG Type info
 case collectionSlug
 	when 'talk'
-		if oembed.html
+		if oembed && oembed.html
 			meta(property="og:video" content=oembed.html.match(/src=\"(.+?)\"/i)[1])
 		meta(property="og:type" content='video.other')
 	default 
