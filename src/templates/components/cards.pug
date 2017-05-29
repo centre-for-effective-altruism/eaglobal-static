@@ -71,11 +71,14 @@ mixin card(item, opts)
 					if showLocation
 						.card-event-location
 							+formatEventLocation(item)
-					if showApplicationLink && item.applicationLink
+					if showApplicationLink
 						.card-event-application-link
-							.row
-								.col-sm-8.col-sm-offset-2.col-md-6.col-md-offset-3
-									a.btn.btn-primary.btn-block(href=item.applicationLink) Apply now!
+							if item.applicationLink && !item.applicationsClosed
+								.row
+									.col-sm-8.col-sm-offset-2.col-md-6.col-md-offset-3
+										a.btn.btn-primary.btn-block(href=item.applicationLink) Apply now!
+							if item.applicationsClosed
+								em Applications closed
 				if item.contentType === 'speaker'
 					if showJobTitle
 						include ../helpers/job-title
