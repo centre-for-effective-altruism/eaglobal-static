@@ -21,7 +21,7 @@ case collectionSlug
 	when 'talk'
 		meta(property="og:video" content=(oembed ? oembed.html.match(/src=\"(.+?)\"/i)[1] : ''))
 		meta(property="og:type" content='video.other')
-	default 
+	default
 		meta(property="og:type" content='website')
 
 //- OG Title / URL / Description
@@ -69,8 +69,8 @@ case collectionSlug
 	default
 		- var twimgUrl = url.parse(defaultLogo, true)
 		- delete twimgUrl.search
-		- twimgUrl.query.w = twimgOpts.w 
-		- twimgUrl.query.h = twimgOpts.h 
+		- twimgUrl.query.w = twimgOpts.w
+		- twimgUrl.query.h = twimgOpts.h
 		- var twitterImage = url.format(twimgUrl)
 meta(name="twitter:image" content=twitterImage)
 //- JSON Schema
@@ -83,7 +83,7 @@ case collectionSlug
 				"url": "#{canonicalURL}",
 				"name": "#{title}",
 				"description": "#{strip(description)}",
-				"thumbnailUrl": "#{contentfulImage(thumbnail,{w:1920,h:1080})}",
+				"thumbnailUrl": "#{thumbnail ? contentfulImage(thumbnail,{w:1920,h:1080}) : ''}",
 				"embedUrl": "#{oembed ? oembed.html.match(/src=\"(.+?)\"/i)[1] : ''}",
 				"publisher": {
 					"@type": "Organization",
