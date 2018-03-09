@@ -1,12 +1,5 @@
 mixin applicationForm(eventSlug)
-  if (eventSlug === 'boston')
-    .bizzabo-sections-widget(data-unique-name="204236" data-tab-id="1293240")
-  else if (eventSlug === 'san-francisco')
-    .bizzabo-sections-widget(data-unique-name="204238" data-tab-id="1293368")
-  else if (eventSlug === 'london')
-    .bizzabo-sections-widget(data-unique-name="eaglondon" data-tab-id="1298376")
+  if (eventSlug === 'london')
+    iframe(src='https://cea-core.typeform.com/to/LUXLVG')
   else
     p Applications opening soon!
-  script.
-    window.bz_widget_env = "https://events.bizzabo.com"
-    loadScript("https://organizer.bizzabo.com/widgets/sections/sections.js")

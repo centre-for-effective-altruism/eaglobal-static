@@ -6,9 +6,9 @@ mixin formatEventDates(ev)
       span.event-dates
         | #{moment(start).format('D')}
         if moment(end).isAfter(start,'month')
-          |  #{moment(end).format('MMMM')}
+          |  #{moment(start).format('MMMM')}
         if moment(end).isAfter(start,'year')
-          |  #{moment(end).format('YYYY')}
+          |  #{moment(start).format('YYYY')}
         if moment(endDate).isAfter(start,'day')
           |  &ndash; #{moment(end).format('D')}
         |  #{moment(end).format('MMMM YYYY')}
@@ -38,8 +38,8 @@ mixin formatEventLocation(ev, opts)
       if showCity && eventCity
         span.event-location-city!=eventCity
       if showCity && eventCity && showCountry && eventCountry
-        | , 
+        | ,#{' '}
       if showCountry
         span.event-location-country!=eventCountry
-    else 
+    else
       span.event-location-tba Location TBA
