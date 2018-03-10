@@ -1,5 +1,5 @@
 extends ./layout
-	
+
 block content
 	- var files = pagination ? pagination.files : files || [];
 	//- Sort / Search / Filter
@@ -12,7 +12,7 @@ block content
 	if slug === 'speakers'
 		- var searchCTA = "Search speakers"
 		- var localSearchData = JSON.stringify(searchData.speakers)
-	
+
 	if showSearch
 		section.section-no-divider.section-search
 			.row
@@ -30,8 +30,8 @@ block content
 					});
 				}(jQuery))
 			});
-			
-				
+
+
 
 	//- Files
 	include ./components/cards
@@ -52,7 +52,7 @@ block content
 		- var pastEvents = []
 		each event in files
 			if !event.startDate || moment(event.startDate).isAfter(moment(),'day')
-				- upcomingEvents.push(event)
+				- upcomingEvents.unshift(event) // ascending date order
 			else
 				- pastEvents.push(event)
 		if upcomingEvents.length>0

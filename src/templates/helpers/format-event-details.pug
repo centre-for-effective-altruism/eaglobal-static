@@ -2,14 +2,16 @@ mixin formatEventDates(ev)
   - var event = ev || {}
   - var start = event.startDate || startDate
   - var end   = event.endDate || endDate
+  - var fuzzy = event.fuzzyDate || fuzzyDate
     if start && end
       span.event-dates
-        | #{moment(start).format('D')}
+        if (!fuzzy)
+          | #{moment(start).format('D')}
         if moment(end).isAfter(start,'month')
           |  #{moment(start).format('MMMM')}
         if moment(end).isAfter(start,'year')
           |  #{moment(start).format('YYYY')}
-        if moment(endDate).isAfter(start,'day')
+        if !fuzzy && moment(end).isAfter(start,'day')
           |  &ndash; #{moment(end).format('D')}
         |  #{moment(end).format('MMMM YYYY')}
     else

@@ -58,7 +58,7 @@ var strip = function (input){
                 i = i.replace(substitution[0],substitution[1]);
             });
             return i;
-        
+
     }
     return htmlEntities.decode(subs(input));
 
@@ -171,7 +171,7 @@ function build(buildCount){
             // add defaults to all our contentful source files
             /*eslint-disable */
             var defaults = {
-                space_id: process.env.CONTENTFUL_SPACE, 
+                space_id: process.env.CONTENTFUL_SPACE,
                 limit: 1000,
                 permalink_style: true
             };
@@ -185,8 +185,8 @@ function build(buildCount){
             done();
         })
         .use(logMessage('Prepared global metadata'))
-        .use(contentful({ 
-            'access_token' : process.env.CONTENTFUL_ACCESS_TOKEN 
+        .use(contentful({
+            'access_token' : process.env.CONTENTFUL_ACCESS_TOKEN
         }))
         .use(function (files,metalsmith,done){
             // get rid of the contentful source files from the build
@@ -201,8 +201,8 @@ function build(buildCount){
             Object.keys(files).filter(minimatch.filter('**/*.html')).forEach(function(file){
                 var meta = files[file];
                 // make sure we have contentful data
-                if(!meta.data || !meta.data.fields){ 
-                    return; 
+                if(!meta.data || !meta.data.fields){
+                    return;
                 }
                 // add all the 'data' fields to the global meta
                 Object.keys(meta.data.fields).forEach(function(key){
@@ -458,7 +458,7 @@ function build(buildCount){
             done();
         })
         .use(branch()
-            .pattern('**/*.html') 
+            .pattern('**/*.html')
             .use(navigation({
                 main: {
                     includeDirs: true
@@ -495,7 +495,7 @@ function build(buildCount){
             files._redirects = {contents:redirectsFile.join('\n')};
             done();
         })
-        .use(logMessage('Calculated redirects'))   
+        .use(logMessage('Calculated redirects'))
         .use(function (files, metalsmith, done) {
             var defaultItem = {
                 file: {},
@@ -545,7 +545,7 @@ function build(buildCount){
 
         })
         .use(logMessage('Built series hierarchy'))
-        
+
         // .use(function (files, metalsmith, done) {
         //     var talks = metalsmith.metadata().collections['talks'];
         //     talks.forEach(function(talk){
@@ -614,7 +614,7 @@ function build(buildCount){
             Object.keys(files).filter(minimatch.filter('{**/index.html,404.html}')).forEach(function(file){
                 if (files[file].template && !files[file].layout) {
                     files[file].layout = files[file].template;
-                } 
+                }
                 files[file].layout = files[file].layout.replace('.jade','.pug');
             });
             // get javascript files so we can inline them if needed
@@ -731,7 +731,7 @@ function build(buildCount){
                         title: 'Build failed!',
                         message: err,
                         appIcon: '',
-                        contentImage: path.join(__dirname, '..', 'src', 'metalsmith', 'images','favicons', 'favicon-96x96.png'), // absolute path (not balloons) 
+                        contentImage: path.join(__dirname, '..', 'src', 'metalsmith', 'images','favicons', 'favicon-96x96.png'), // absolute path (not balloons)
                         sound: 'Funk',
                         activate: 'com.apple.Terminal'
                     });
@@ -743,7 +743,7 @@ function build(buildCount){
                         title: 'Build succeeded!',
                         message: 'Click to switch to Chrome',
                         appIcon: '',
-                        contentImage: path.join(__dirname, '..', 'src', 'metalsmith', 'images','favicons', 'favicon-96x96.png'), // absolute path (not balloons) 
+                        contentImage: path.join(__dirname, '..', 'src', 'metalsmith', 'images','favicons', 'favicon-96x96.png'), // absolute path (not balloons)
                         sound: 'Glass',
                         activate: 'com.google.Chrome'
                     });
@@ -775,7 +775,7 @@ build()();
         path.join(__dirname,'..','src','metalsmith','fonts'),
         path.join(__dirname,'..','src','metalsmith','images'),
         path.join(__dirname,'..','src','metalsmith','settings'),
-    ], {ignoreInitial: false}, build(2));   
+    ], {ignoreInitial: false}, build(2));
 } else {
     build()();
 }*/
