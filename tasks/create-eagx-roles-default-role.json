@@ -135,32 +135,6 @@
           {
             "equals": [
               {
-                "doc": "sys.contentType.sys.id"
-              },
-              "speaker"
-            ]
-          }
-        ]
-      },
-      "actions": [
-        "read"
-      ]
-    },
-    {
-      "effect": "allow",
-      "constraint": {
-        "and": [
-          {
-            "equals": [
-              {
-                "doc": "sys.type"
-              },
-              "Entry"
-            ]
-          },
-          {
-            "equals": [
-              {
                 "doc": "sys.createdBy.sys.id"
               },
               "User.current()"
@@ -193,6 +167,8 @@
         ]
       },
       "actions": [
+        "read",
+        "update",
         "create"
       ]
     },
@@ -219,6 +195,7 @@
         ]
       },
       "actions": [
+        "read",
         "create"
       ]
     },
@@ -245,6 +222,7 @@
         ]
       },
       "actions": [
+        "read",
         "create"
       ]
     },
@@ -263,7 +241,8 @@
         ]
       },
       "actions": [
-        "read"
+        "read",
+        "create"
       ]
     },
     {
