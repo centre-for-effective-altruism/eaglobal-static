@@ -21,7 +21,11 @@ block content
 				if !applicationsClosed && applicationLink
 					.row
 						.col-sm-6.col-sm-offset-3.col-md-4.col-md-offset-4
-							a.btn.btn-primary.btn-block(href=applicationLink) Apply now!
+							a.btn.btn-primary.btn-block(href=applicationLink)
+								if slugify(eventType) === 'eagx'
+									| Register now!
+								else
+									| Apply now!
 				if applicationsClosed && moment(endDate).isAfter(moment(), 'day')
 						em Applications closed
 		if description || contactEmail
@@ -33,7 +37,7 @@ block content
 								!= contents
 						if moment(endDate).add(14,'days').isAfter(moment(),'day') && contactEmail
 							.event-basic-info-contact
-								| For more information email 
+								| For more information email
 								a(href=contactEmail)!= contactEmail
 		//- Get all Speakers associated with this event
 		if featuredSpeakers && featuredSpeakers.length > 0

@@ -17,7 +17,7 @@
     "production": "NODE_ENV=production npm run build"
   },
   "engines": {
-    "node": "6.1.0"
+    "node": "8.10"
   },
   "repository": {
     "type": "git",
