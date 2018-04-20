@@ -142,7 +142,7 @@ function build(buildCount){
 
 
         // START THE BUILD!
-        // TODO: what's this variable name doing?
+        // TODO: change this name to metalsmith (prolly just do in boilerplate)
         var colophonemes = new Metalsmith(__dirname);
         colophonemes
         .use(logMessage('NODE_ENV: ' + process.env.NODE_ENV,chalk.dim,true))
