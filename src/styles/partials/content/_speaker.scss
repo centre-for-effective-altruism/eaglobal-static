@@ -9,3 +9,9 @@
 	color: #999;
 	font-size: 24px;
 }
+.speaker-talks-talk {
+	@media(min-width: $screen-sm) {
+		height: 280px;
+		overflow: hidden;
+	}
+}

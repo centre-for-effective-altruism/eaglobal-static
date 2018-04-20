@@ -43,7 +43,10 @@ block content
 				.row
 					- var talkWidthClasses = ['col-sm-6','col-sm-offset-3','col-md-4', 'col-md-offset-4'];
 					if speakerTalks.length === 2
-						- talkWidthClasses = ['col-sm-6'];
+						//- TODO: The width is meant for the 3 wide here. It
+						//- is necessary for maximum height reasons, but throws
+						//- off centering
+						- talkWidthClasses = ['col-sm-4'];
 					if speakerTalks.length === 3
 						- talkWidthClasses = ['col-sm-4'];
 					if speakerTalks.length >= 4
