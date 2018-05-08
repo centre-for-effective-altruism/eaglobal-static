@@ -38,7 +38,7 @@ block content
 						if moment(endDate).add(14,'days').isAfter(moment(),'day') && contactEmail
 							.event-basic-info-contact
 								| For more information email#{' '}
-								a(href=contactEmail)!= contactEmail
+								a(href=`mailto:`+ contactEmail)!= contactEmail
 		//- Get all Speakers associated with this event
 		if featuredSpeakers && featuredSpeakers.length > 0
 			section.event-speakers.section-divider

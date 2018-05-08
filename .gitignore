@@ -12,3 +12,4 @@ src/metalsmith/styles/*
 src/metalsmith/scripts/*
 .netlify
 yarn-error.log
+.idea
