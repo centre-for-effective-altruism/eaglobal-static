@@ -64,6 +64,7 @@ var strip = function (input){
 
 };
 var contentfulImage = function(image,query){
+    if (!image.fields) return false
     var src = url.parse(image.fields.file.url,true);
     if (src.search) delete src.search;
     src.query = Object.assign({},src.query,query);
