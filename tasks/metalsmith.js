@@ -64,6 +64,7 @@ var strip = function (input){
 
 };
 var contentfulImage = function(image,query){
+    if (!image.fields) return false
     var src = url.parse(image.fields.file.url,true);
     if (src.search) delete src.search;
     src.query = Object.assign({},src.query,query);
@@ -142,6 +143,7 @@ function build(buildCount){
 
 
         // START THE BUILD!
+        // TODO: change this name to metalsmith (prolly just do in boilerplate)
         var colophonemes = new Metalsmith(__dirname);
         colophonemes
         .use(logMessage('NODE_ENV: ' + process.env.NODE_ENV,chalk.dim,true))
