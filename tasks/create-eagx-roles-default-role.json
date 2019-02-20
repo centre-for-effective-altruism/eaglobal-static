@@ -263,7 +263,8 @@
         ]
       },
       "actions": [
-        "read"
+        "read",
+        "create"
       ]
     },
     {
