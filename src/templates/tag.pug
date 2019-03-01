@@ -4,11 +4,11 @@ block header
 	include ./layout/header
 	+header({title: false})
 	+headerText('Tag: '+title)
-	
+
 block prepend content
 	- var files = []
 	each file in collections['talks']
 		if file.tags
 			each tag in file.tags
-				if tag.fields.slug === slug
+				if tag.fields && tag.fields.slug === slug
 					- files.push(file)
