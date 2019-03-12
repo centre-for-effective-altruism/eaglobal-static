@@ -8,6 +8,8 @@
 
 # Redirect domain aliases to primary domain
 https://effective.altruism.global/* https://www.eaglobal.org/:splat 302!
+https://global.effectivealtruism.org/* https://www.eaglobal.org/:splat 301!
+
 
 # Optional: Redirect default Netlify subdomain to primary domain
 https://effective-altruism-global.netlify.com/* https://www.eaglobal.org/:splat 302!
