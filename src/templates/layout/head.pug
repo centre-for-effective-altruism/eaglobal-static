@@ -43,7 +43,7 @@ head
     if environment !== 'development'
         script.
             analytics.load("ZdyjGpt6DFxdicLavj5y9EvJfdQ4xDgB");
-            analytics.page('#{title}') // TODO; sanitize
+            analytics.page('#{title}') // TODO: sanitize
         if slug === '404'
             script.
                 analytics.track('HTTPError',{
