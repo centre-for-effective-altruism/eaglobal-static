@@ -105,6 +105,13 @@ site.url = site.protocol + site.domain;
 message('Loaded utilities...');
 message('All dependencies loaded!',chalk.cyan);
 
+// Get the url of a talk video from the oembed html
+var getOembedHref = function (oembed) {
+  if (!oembed) return ''
+  var match = oembed.html.match(/(src|href)=\"(.+?)\"/i)
+  if (!match) return
+  return match[1]
+}
 
 
 // call the master build function
@@ -125,17 +132,9 @@ function build(buildCount){
       'vimeo.com',
     ];
 
+    // base options used for multiple templates
     var templateOpts = {
       engine: 'pug',
-      cache: true
-    }
-
-    // shortcodes is used twice so abstract the options object
-    var shortcodeOpts = {
-      directory: path.normalize(__dirname+'/../src/templates/shortcodes'),
-      pattern: '**/*.html',
-      engine:'pug',
-      extension:'.pug',
       cache: true,
       url,
       truncate,
@@ -143,25 +142,26 @@ function build(buildCount){
       slugify: slug,
       moment,
       embedHostnames,
-      contentfulImage
+      contentfulImage,
+      getOembedHref
+    }
+
+    // shortcodes is used twice so abstract the options object
+    var shortcodeOpts = {
+      ...templateOpts,
+      directory: path.normalize(__dirname+'/../src/templates/shortcodes'),
+      pattern: '**/*.html',
+      extension:'.pug',
     };
 
     var layoutOpts = {
+      ...templateOpts,
       engine:'pug',
       directory: '../src/templates',
       pretty: process.env.NODE_ENV === 'development',
       cache: true,
-      typogr,
-      truncate,
-      url,
-      moment,
       strip,
       jsFiles,
-      slugify:slug,
-      // collectionSlugs,
-      // collectionInfo,
-      embedHostnames,
-      contentfulImage,
       environment: process.env.NODE_ENV
     }
 
@@ -634,18 +634,6 @@ function build(buildCount){
       done();
     })
     .use(logMessage('Built search index'))
-    .use(function (files, metalsmith, done) {
-      Object.keys(files).filter(minimatch.filter('talks/**')).forEach(function (file) {
-        const oembed = files[file].oembed
-        if (!oembed) return
-        const match = oembed.html.match(/(src|href)=\"(.+?)\"/i)
-        if (!match) {
-          console.log('oembed html not matching, html:', oembed.html)
-          console.log('file:', file)
-        }
-      })
-      done()
-    })
     .use(function (files, metalsmith, done) {
       // copy 'template' key to 'layout' key
       Object.keys(files).filter(minimatch.filter('{**/index.html,404.html}')).forEach(function(file){

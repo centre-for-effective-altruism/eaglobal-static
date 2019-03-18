@@ -19,8 +19,7 @@ mixin ogImageTags(contentfulImageURL)
 //- OG Type info
 case collectionSlug
   when 'talk'
-    console.log('----------- hello wolrd --vvvvvvvvvvvvvvv----------')
-    meta(property="og:video" content=(oembed ? oembed.html.match(/(src|href)=\"(.+?)\"/i)[1] : ''))
+    meta(property="og:video" content=getOembedHref(oembed))
     meta(property="og:type" content='video.other')
   default
     meta(property="og:type" content='website')
@@ -85,7 +84,7 @@ case collectionSlug
         "name": "#{title}",
         "description": "#{strip(description)}",
         "thumbnailUrl": "#{thumbnail ? contentfulImage(thumbnail,{w:1920,h:1080}) : ''}",
-        "embedUrl": "#{oembed ? oembed.html.match(/src=\"(.+?)\"/i)[1] : ''}",
+        "embedUrl": "#{getOembedHref(oembed)}",
         "publisher": {
           "@type": "Organization",
           "name": "Centre for Effective Altruism",

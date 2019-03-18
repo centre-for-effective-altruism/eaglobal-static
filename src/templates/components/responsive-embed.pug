@@ -10,7 +10,9 @@ mixin oembed(oembed, opts)
   - var autoplay = options.autoplay === false ? false : true
   - var aspectClass = 'embed-responsive-'+'16by9'
   - var html = oembed.html
-  - var href = url.parse(html.match(/src=\"(.+?)\"/i)[1], true)
+  // second argument is `parseQueryString` which tells parse to turn the query
+  // string into an object
+  - var href = url.parse(getOembedHref(oembed), true)
   - var provider = oembed.provider_name
   //- Autoplay params
   if autoplay
