@@ -156,10 +156,8 @@ function build(buildCount){
 
     var layoutOpts = {
       ...templateOpts,
-      engine:'pug',
       directory: '../src/templates',
       pretty: process.env.NODE_ENV === 'development',
-      cache: true,
       strip,
       jsFiles,
       environment: process.env.NODE_ENV
