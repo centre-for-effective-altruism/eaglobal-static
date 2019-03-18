@@ -10,5 +10,5 @@ block prepend content
   each file in collections['talks']
     if file.tags
       each tag in file.tags
-        if tag.fields.slug === slug
+        if tag.fields && tag.fields.slug === slug
           - files.push(file)
