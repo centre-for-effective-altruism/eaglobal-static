@@ -1,17 +1,17 @@
 .speaker-page-title {
-	margin-bottom: 0;
-	&.no-job-title {
-		margin-bottom: 16.5px;
-	}
+  margin-bottom: 0;
+  &.no-job-title {
+    margin-bottom: 16.5px;
+  }
 }
 .speaker-occupation {
-	font-family: $font-family-sans-serif;
-	color: #999;
-	font-size: 24px;
+  font-family: $font-family-sans-serif;
+  color: #999;
+  font-size: 24px;
 }
 .speaker-talks-talk {
-	@media(min-width: $screen-sm) {
-		height: 280px;
-		overflow: hidden;
-	}
+  @media(min-width: $screen-sm) {
+    height: 280px;
+    overflow: hidden;
+  }
 }

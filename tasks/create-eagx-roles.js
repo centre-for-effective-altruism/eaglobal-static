@@ -4,7 +4,7 @@ const slug = require('slug'); slug.defaults.mode = 'rfc3986';
 const chalk = require('chalk');
 const moment = require('moment');
 const Promise = require('bluebird');
-var Slack = require('slack-node');
+const Slack = require('slack-node');
 
 const fs = Promise.promisifyAll(require('fs'));
 const path = require('path');

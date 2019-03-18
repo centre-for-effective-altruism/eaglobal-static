@@ -26,23 +26,23 @@ const tick = chalk.green('✓');
 console.log(chalk.inverse('Searching for Contentful entries with missing embed data...'));
 contentful.space(function(space){
 
-	return space.getEntries({content_type:'talk'})
-	.then(function(entries){
-		console.log('Got',entries.items.length,'entries')
-		var updatedEntries = entries.items.map((entry) => {
-			delete entry.fields.oembed;
-			return entry;
-		})
-		return contentful.itemQueue('update',updatedEntries)
-		.then(function(entries){
-			console.log('updated')
-		})
-	})
-	.catch(function(err){
-		console.error(chalk.red(err));
-		throw err;
-	})
+  return space.getEntries({content_type:'talk'})
+  .then(function(entries){
+    console.log('Got',entries.items.length,'entries')
+    var updatedEntries = entries.items.map((entry) => {
+      delete entry.fields.oembed;
+      return entry;
+    })
+    return contentful.itemQueue('update',updatedEntries)
+    .then(function(entries){
+      console.log('updated')
+    })
+  })
+  .catch(function(err){
+    console.error(chalk.red(err));
+    throw err;
+  })
 })
 .catch(function(err){
-	throw err;
+  throw err;
 });

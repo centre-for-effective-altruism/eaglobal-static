@@ -2,7 +2,7 @@ head
     - var collectionSlug = collectionSlug || collections[collection] && collections[collection].metadata && collections[collection].metadata.singular ? collections[collection]['metadata']['singular'] : "";
     -var canonicalURL = site.url + canonical;
     -var description = description || excerpt || site.description;
-    
+
     meta(charset='utf-8')
     meta(http-equiv='X-UA-Compatible', content='IE=edge')
     title
@@ -43,7 +43,7 @@ head
     if environment !== 'development'
         script.
             analytics.load("ZdyjGpt6DFxdicLavj5y9EvJfdQ4xDgB");
-            analytics.page('#{title}')
+            analytics.page('#{title}') // TODO: sanitize
         if slug === '404'
             script.
                 analytics.track('HTTPError',{

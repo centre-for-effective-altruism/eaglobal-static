@@ -1,88 +1,88 @@
 extends ./layout
 
 block header
-	header#header
-		include ./components/breadcrumbs
-		-var logoType = slugify(eventType) === 'eagx' ? 'eagx' : 'eag';
-		include ./layout/header
-		+headerLogo(logoType)
-		+headerText(title)
+  header#header
+    include ./components/breadcrumbs
+    -var logoType = slugify(eventType) === 'eagx' ? 'eagx' : 'eag';
+    include ./layout/header
+    +headerLogo(logoType)
+    +headerText(title)
 
 block content
-	include ./components/cards
-	#content
-		section.event-details.section-no-divider
-			.event-details-dates
-				include ./helpers/format-event-details
-				+formatEventDates()
-			.event-details-location
-				+formatEventLocation()
-			.event-details-application-link
-				if !applicationsClosed && applicationLink
-					.row
-						.col-sm-6.col-sm-offset-3.col-md-4.col-md-offset-4
-							a.btn.btn-primary.btn-block(href=applicationLink)
-								if slugify(eventType) === 'eagx'
-									| Register now!
-								else
-									| Apply now!
-				if applicationsClosed && moment(endDate).isAfter(moment(), 'day')
-						em Applications closed
-		if description || contactEmail
-			section.event-basic-info.section-divider
-				.row
-					.col-lg-10.col-lg-offset-1.col-md-8.col-md-offset-2
-						if description
-							.event-basic-info-description
-								!= contents
-						if moment(endDate).add(14,'days').isAfter(moment(),'day') && contactEmail
-							.event-basic-info-contact
-								| For more information email#{' '}
-								a(href=`mailto:`+ contactEmail)!= contactEmail
-		//- Get all Speakers associated with this event
-		if featuredSpeakers && featuredSpeakers.length > 0
-			section.event-speakers.section-divider
-				h2.event-speakers-title Featured speakers
-				.row
-					- var speakerWidths = ['col-sm-6','col-sm-offset-3']
-					if featuredSpeakers.length === 2
-						- speakerWidths = ['col-sm-4']
-					if featuredSpeakers.length === 3
-						- speakerWidths = ['col-sm-4']
-					if featuredSpeakers.length === 4
-						- speakerWidths = ['col-sm-3']
-					if featuredSpeakers.length >= 5
-						- speakerWidths = ['col-sm-4']
+  include ./components/cards
+  #content
+    section.event-details.section-no-divider
+      .event-details-dates
+        include ./helpers/format-event-details
+        +formatEventDates()
+      .event-details-location
+        +formatEventLocation()
+      .event-details-application-link
+        if !applicationsClosed && applicationLink
+          .row
+            .col-sm-6.col-sm-offset-3.col-md-4.col-md-offset-4
+              a.btn.btn-primary.btn-block(href=applicationLink)
+                if slugify(eventType) === 'eagx'
+                  | Register now!
+                else
+                  | Apply now!
+        if applicationsClosed && moment(endDate).isAfter(moment(), 'day')
+            em Applications closed
+    if description || contactEmail
+      section.event-basic-info.section-divider
+        .row
+          .col-lg-10.col-lg-offset-1.col-md-8.col-md-offset-2
+            if description
+              .event-basic-info-description
+                != contents
+            if moment(endDate).add(14,'days').isAfter(moment(),'day') && contactEmail
+              .event-basic-info-contact
+                | For more information email#{' '}
+                a(href=`mailto:`+ contactEmail)!= contactEmail
+    //- Get all Speakers associated with this event
+    if featuredSpeakers && featuredSpeakers.length > 0
+      section.event-speakers.section-divider
+        h2.event-speakers-title Featured speakers
+        .row
+          - var speakerWidths = ['col-sm-6','col-sm-offset-3']
+          if featuredSpeakers.length === 2
+            - speakerWidths = ['col-sm-4']
+          if featuredSpeakers.length === 3
+            - speakerWidths = ['col-sm-4']
+          if featuredSpeakers.length === 4
+            - speakerWidths = ['col-sm-3']
+          if featuredSpeakers.length >= 5
+            - speakerWidths = ['col-sm-4']
 
-					each s in featuredSpeakers.slice(0,6)
-						-var speaker = fileIDMap[s.sys.id]
-						div.event-speakers-speaker(class=speakerWidths)
-							+card(speaker, {website: false, aspect: '66.66%',readMore:true})
-		//- Get all talks associated with this event
-		- var showFeaturedTalks = false
-		each talk in talks
-			if talk.event.sys.id === id
-				- showFeaturedTalks = true
-		if showFeaturedTalks
-			section.event-talks.section-divider
-				h2.event-talks-title Featured Talks
-				include ./components/featured-talks
-				+featuredTalks(id)
-				.event-talks-view-all.view-all-link
-					a(href='/talks/') View all talks
-					//- from #{title}
+          each s in featuredSpeakers.slice(0,6)
+            -var speaker = fileIDMap[s.sys.id]
+            div.event-speakers-speaker(class=speakerWidths)
+              +card(speaker, {website: false, aspect: '66.66%',readMore:true})
+    //- Get all talks associated with this event
+    - var showFeaturedTalks = false
+    each talk in talks
+      if talk.event.sys.id === id
+        - showFeaturedTalks = true
+    if showFeaturedTalks
+      section.event-talks.section-divider
+        h2.event-talks-title Featured Talks
+        include ./components/featured-talks
+        +featuredTalks(id)
+        .event-talks-view-all.view-all-link
+          a(href='/talks/') View all talks
+          //- from #{title}
 
-		//- Get all Galleries associated with this event
-		each gallery in galleries
-			if gallery.event && gallery.event.sys.id === id
-				section.event-photos.section-divider
-					h2.event-photos-title Photos
-					.row
-						each image in gallery.images.slice(0,4)
-							.col-md-3
-								figure.event-photos-photo-wrapper
-									.content
-										a(href=gallery.canonical)
-											img.event-photos-photo(src=contentfulImage(image))
-					.event-talks-view-all.event-view-all
-						a(href=gallery.canonical) View all photos from #{title}
+    //- Get all Galleries associated with this event
+    each gallery in galleries
+      if gallery.event && gallery.event.sys.id === id
+        section.event-photos.section-divider
+          h2.event-photos-title Photos
+          .row
+            each image in gallery.images.slice(0,4)
+              .col-md-3
+                figure.event-photos-photo-wrapper
+                  .content
+                    a(href=gallery.canonical)
+                      img.event-photos-photo(src=contentfulImage(image))
+          .event-talks-view-all.event-view-all
+            a(href=gallery.canonical) View all photos from #{title}
