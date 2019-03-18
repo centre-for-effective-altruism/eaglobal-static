@@ -19,7 +19,8 @@ mixin ogImageTags(contentfulImageURL)
 //- OG Type info
 case collectionSlug
 	when 'talk'
-		meta(property="og:video" content=(oembed ? oembed.html.match(/src=\"(.+?)\"/i)[1] : ''))
+		console.log('----------- hello wolrd --vvvvvvvvvvvvvvv----------')
+		meta(property="og:video" content=(oembed ? oembed.html.match(/(src|href)=\"(.+?)\"/i)[1] : ''))
 		meta(property="og:type" content='video.other')
 	default
 		meta(property="og:type" content='website')

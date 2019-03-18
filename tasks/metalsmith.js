@@ -125,6 +125,11 @@ function build(buildCount){
             'vimeo.com',
         ];
 
+        var templateOpts = {
+            engine: 'pug',
+            cache: true
+        }
+
         // shortcodes is used twice so abstract the options object
         var shortcodeOpts = {
             directory: path.normalize(__dirname+'/../src/templates/shortcodes'),
@@ -141,6 +146,24 @@ function build(buildCount){
             contentfulImage
         };
 
+        var layoutOpts = {
+          engine:'pug',
+          directory: '../src/templates',
+          pretty: process.env.NODE_ENV === 'development',
+          cache: true,
+          typogr,
+          truncate,
+          url,
+          moment,
+          strip,
+          jsFiles,
+          slugify:slug,
+          // collectionSlugs,
+          // collectionInfo,
+          embedHostnames,
+          contentfulImage,
+          environment: process.env.NODE_ENV
+        }
 
         // START THE BUILD!
         // TODO: change this name to metalsmith (prolly just do in boilerplate)
@@ -612,6 +635,18 @@ function build(buildCount){
         })
         .use(logMessage('Built search index'))
         .use(function (files, metalsmith, done) {
+            Object.keys(files).filter(minimatch.filter('talks/**')).forEach(function (file) {
+                const oembed = files[file].oembed
+                if (!oembed) return
+                const match = oembed.html.match(/(src|href)=\"(.+?)\"/i)
+                if (!match) {
+                  console.log('oembed html not matching, html:', oembed.html)
+                  console.log('file:', file)
+                }
+            })
+            done()
+        })
+        .use(function (files, metalsmith, done) {
             // copy 'template' key to 'layout' key
             Object.keys(files).filter(minimatch.filter('{**/index.html,404.html}')).forEach(function(file){
                 if (files[file].template && !files[file].layout) {
@@ -629,24 +664,7 @@ function build(buildCount){
             });
             done();
         })
-        .use(layouts({
-            engine:'pug',
-            directory: '../src/templates',
-            pretty: process.env.NODE_ENV === 'development' ? true : false,
-            cache: true,
-            typogr,
-            truncate,
-            url,
-            moment,
-            strip,
-            jsFiles,
-            slugify:slug,
-            // collectionSlugs,
-            // collectionInfo,
-            embedHostnames,
-            contentfulImage,
-            environment: process.env.NODE_ENV
-        }))
+        .use(layouts(layoutOpts))
         .use(logMessage('Built HTML files from templates'))
         .use(icons({
             fontDir: 'fonts',
