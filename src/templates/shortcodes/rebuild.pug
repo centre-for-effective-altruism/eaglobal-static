@@ -2,28 +2,28 @@
 p(style="color: red; font-weight: bold;") Don't click this unless you know what you're doing:
 button.btn.btn-danger.rebuild-button Rebuild
 script.
-	loadScript(function(){
-		console.log('script called');
-		(function($){
-			var b = $('.rebuild-button');
-			var a = $('.rebuild-message');
-			b.on('click',clickHandler)
+  loadScript(function(){
+    console.log('script called');
+    (function($){
+      var b = $('.rebuild-button');
+      var a = $('.rebuild-message');
+      b.on('click',clickHandler)
 
-			function clickHandler(){
-				a.addClass('hidden')
-				if(b.hasClass('btn-danger')){
-					b
-					.removeClass('btn-danger')
-					.addClass('btn-default')
-					.addClass('disabled')
+      function clickHandler(){
+        a.addClass('hidden')
+        if(b.hasClass('btn-danger')){
+          b
+          .removeClass('btn-danger')
+          .addClass('btn-default')
+          .addClass('disabled')
 
-					$.post('https://api.netlify.com/build_hooks/578791924e9f9d129883734b', function(data){
-						b.addClass('btn-danger')
-						.removeClass('btn-default')
-						.removeClass('disabled')
-						a.removeClass('hidden')
-					})
-				}
-			}
-		})(jQuery);
-	})
+          $.post('https://api.netlify.com/build_hooks/578791924e9f9d129883734b', function(data){
+            b.addClass('btn-danger')
+            .removeClass('btn-default')
+            .removeClass('disabled')
+            a.removeClass('hidden')
+          })
+        }
+      }
+    })(jQuery);
+  })

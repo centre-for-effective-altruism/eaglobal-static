@@ -2,12 +2,12 @@ html,body {
     height:100%;
 }
 body {
-	background-color: #FFF;
-	font-weight: $font-weight-normal;
-	position: relative;
+  background-color: #FFF;
+  font-weight: $font-weight-normal;
+  position: relative;
 }
 h1,h2,h3,h4,h5,h6 {
-	// color: $site-primary;
+  // color: $site-primary;
 }
 // don't line-wrap code blocks
 pre {
@@ -25,46 +25,46 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 figure {
-	margin: 0 0 $grid-gutter-width/2;
-	.img-responsive {
-		margin-left: auto;
-	}
-	figcaption {
-		font-weight: $font-weight-normal;
-		padding: $grid-gutter-width/2 0 0;
-		h3, h4, p {
-			margin-top: 0;
-		}
-	}
+  margin: 0 0 $grid-gutter-width/2;
+  .img-responsive {
+    margin-left: auto;
+  }
+  figcaption {
+    font-weight: $font-weight-normal;
+    padding: $grid-gutter-width/2 0 0;
+    h3, h4, p {
+      margin-top: 0;
+    }
+  }
 }
 table {
-	thead {
-		tr {
-			th {
-				background-color: $site-primary;
-				color: #FFF;
-			}
-		}
-	}
-	tbody {
-		tr {
-			th {
-				background-color: $site-secondary;
-			}
-		}
-	}
-	.border-right {
-		border-right: 1px solid #DDD;
-	}
-	&.table-striped>tbody>tr:nth-of-type(odd)>th{
-		background-color: darken($site-secondary,2%);
-	}
+  thead {
+    tr {
+      th {
+        background-color: $site-primary;
+        color: #FFF;
+      }
+    }
+  }
+  tbody {
+    tr {
+      th {
+        background-color: $site-secondary;
+      }
+    }
+  }
+  .border-right {
+    border-right: 1px solid #DDD;
+  }
+  &.table-striped>tbody>tr:nth-of-type(odd)>th{
+    background-color: darken($site-secondary,2%);
+  }
 }
 ul {
-	padding-left: 0;
+  padding-left: 0;
 }
 
 ::selection {
-	background-color: $site-primary;
-	color: #FFF;
+  background-color: $site-primary;
+  color: #FFF;
 }

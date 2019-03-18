@@ -1,57 +1,57 @@
 extends ./layout
 
 block header
-	header#header
-		.row
-			include ./components/breadcrumbs
-			h1.page-title#page-title!= typogr.typogrify(title)
-			if jobTitle || organization
-				p.speaker-occupation
-					include ./helpers/job-title
-					+jobTitle(data.fields)
+  header#header
+    .row
+      include ./components/breadcrumbs
+      h1.page-title#page-title!= typogr.typogrify(title)
+      if jobTitle || organization
+        p.speaker-occupation
+          include ./helpers/job-title
+          +jobTitle(data.fields)
 block content
-	#content
-		section.speaker-bio.section-no-divider
-			.row
-				- var hasBio = false
-				if strip(contents).length > 1
-					- hasBio = true
-				- var photoWidths = ['col-sm-4']
-				- var bioWidths = ['col-sm-8']
-				if !hasBio && photo
-					- photoWidths = ['col-sm-6', 'col-sm-offset-3']
-				if hasBio && !photo
-					- bioWidths = ['col-sm-8', 'col-sm-offset-2']
+  #content
+    section.speaker-bio.section-no-divider
+      .row
+        - var hasBio = false
+        if strip(contents).length > 1
+          - hasBio = true
+        - var photoWidths = ['col-sm-4']
+        - var bioWidths = ['col-sm-8']
+        if !hasBio && photo
+          - photoWidths = ['col-sm-6', 'col-sm-offset-3']
+        if hasBio && !photo
+          - bioWidths = ['col-sm-8', 'col-sm-offset-2']
 
-				if photo
-					.speaker-bio-photo(class=photoWidths)
-						img(src=contentfulImage(photo))
-				if hasBio
-					.speaker-bio-text(class=bioWidths)
-						!= contents
+        if photo
+          .speaker-bio-photo(class=photoWidths)
+            img(src=contentfulImage(photo))
+        if hasBio
+          .speaker-bio-text(class=bioWidths)
+            != contents
 
-		- var speakerTalks = []
-		for talk in talks
-			if talk.speakers && talk.speakers.length
-				for s in talk.speakers
-					if s.sys.id === id
-						- speakerTalks.push(talk)
-		if speakerTalks.length
-			include ./components/cards
-			section.speaker-talks.section-divider
-				h2.speaker-talks-title Talks
-				.row
-					- var talkWidthClasses = ['col-sm-6','col-sm-offset-3','col-md-4', 'col-md-offset-4'];
-					if speakerTalks.length === 2
-						//- TODO: The width is meant for the 3 wide here. It
-						//- is necessary for maximum height reasons, but throws
-						//- off centering
-						- talkWidthClasses = ['col-sm-4'];
-					if speakerTalks.length === 3
-						- talkWidthClasses = ['col-sm-4'];
-					if speakerTalks.length >= 4
-						- talkWidthClasses = ['col-sm-3'];
-					each talk in speakerTalks
-						div(class=talkWidthClasses)
-							.speaker-talks-talk
-								+card(talk,{event:true, speakers:false})
+    - var speakerTalks = []
+    for talk in talks
+      if talk.speakers && talk.speakers.length
+        for s in talk.speakers
+          if s.sys.id === id
+            - speakerTalks.push(talk)
+    if speakerTalks.length
+      include ./components/cards
+      section.speaker-talks.section-divider
+        h2.speaker-talks-title Talks
+        .row
+          - var talkWidthClasses = ['col-sm-6','col-sm-offset-3','col-md-4', 'col-md-offset-4'];
+          if speakerTalks.length === 2
+            //- TODO: The width is meant for the 3 wide here. It
+            //- is necessary for maximum height reasons, but throws
+            //- off centering
+            - talkWidthClasses = ['col-sm-4'];
+          if speakerTalks.length === 3
+            - talkWidthClasses = ['col-sm-4'];
+          if speakerTalks.length >= 4
+            - talkWidthClasses = ['col-sm-3'];
+          each talk in speakerTalks
+            div(class=talkWidthClasses)
+              .speaker-talks-talk
+                +card(talk,{event:true, speakers:false})

@@ -3,7 +3,7 @@ $quotation-mark-spacing: 60px;
 $text-spacing: $author-image-size + $quotation-mark-spacing + ( $grid-gutter-width );
 
 .quotation {
-	@include clearfix();
+  @include clearfix();
 }
 .quotation-author-image {
     width: $author-image-size !important;
@@ -32,19 +32,19 @@ $text-spacing: $author-image-size + $quotation-mark-spacing + ( $grid-gutter-wid
     }
     @media(min-width: $screen-md){
         padding-left: $text-spacing;
-    	&:before {
-    	    content: "\201C ";
-    	    font-family: Georgia;
-    	    float: left;
-    	    height: 0;
-    	    width: 0;
-    	    position: relative;
-    	    left: -67px;
-    	    top: 54px;
-    	    font-size: 120px;
-    	    line-height: 0;
-    	    color: $site-muted;
-    	}
+      &:before {
+          content: "\201C ";
+          font-family: Georgia;
+          float: left;
+          height: 0;
+          width: 0;
+          position: relative;
+          left: -67px;
+          top: 54px;
+          font-size: 120px;
+          line-height: 0;
+          color: $site-muted;
+      }
     }
 }
 
@@ -59,7 +59,7 @@ $text-spacing: $author-image-size + $quotation-mark-spacing + ( $grid-gutter-wid
     margin: 0;
     font-weight: $font-weight-bold;
     &:before {
-    	content: '— ';
+      content: '— ';
     }
 }
 

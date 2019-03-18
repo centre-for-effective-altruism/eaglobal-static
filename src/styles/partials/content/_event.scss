@@ -1,13 +1,13 @@
 .event-photos-photo-wrapper {
-	@include responsive-square(66.66%);
+  @include responsive-square(66.66%);
 }
 
 body.event {
-	#page-title {
-		border: none;
-		text-align: center;
-		font-size: 40px;
-	}
+  #page-title {
+    border: none;
+    text-align: center;
+    font-size: 40px;
+  }
 }
 
 
@@ -19,31 +19,31 @@ body.event {
 }
 
 .event-details-location {
-	color: #999;
+  color: #999;
 }
 
 .event-details-application-link {
-	margin: $grid-gutter-width 0;
+  margin: $grid-gutter-width 0;
 }
 
 .event-talks-talk {
-	.embed-link-title {
-		@media(min-width: $screen-sm) {
-			height: 39px;
-			overflow: hidden;
-		}
-	}
+  .embed-link-title {
+    @media(min-width: $screen-sm) {
+      height: 39px;
+      overflow: hidden;
+    }
+  }
 }
 
 .event-speakers-speaker-occupation {
-	@media(min-width: $screen-sm) {
-		height: 58px;
-		overflow: hidden;
-	}
+  @media(min-width: $screen-sm) {
+    height: 58px;
+    overflow: hidden;
+  }
 }
 .event-speakers-speaker {
-	@media(min-width: $screen-sm) {
-		height: 380px;
-		overflow: hidden;
-	}
+  @media(min-width: $screen-sm) {
+    height: 380px;
+    overflow: hidden;
+  }
 }

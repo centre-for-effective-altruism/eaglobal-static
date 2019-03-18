@@ -30,23 +30,23 @@ const slug = require('slug'); slug.defaults.mode = 'rfc3986';
 const contentful = new Contentful();
 
 contentful.space((space) => {
-	console.log('Opened the space');
-	var talks = talkData.map((talk) => {
-		return {
-		title: talk.title,
-		slug: slug(talk.title),
-		embedUrl: 'https://www.youtube.com/watch?v=' + talk.id,
-		event: {
+  console.log('Opened the space');
+  var talks = talkData.map((talk) => {
+    return {
+    title: talk.title,
+    slug: slug(talk.title),
+    embedUrl: 'https://www.youtube.com/watch?v=' + talk.id,
+    event: {
             sys: {
                 type: 'Link',
                 linkType: 'Entry',
                 id: '4n5vRupVmM2oa0yKmYgeIe'
             }                
-		}
-	}});
-	talks = contentful.formatItems(talks)
-	space.queue('createEntry','talk',talks)
-	.then(function(talks){
-		console.log('created talks!');
-	})
+    }
+  }});
+  talks = contentful.formatItems(talks)
+  space.queue('createEntry','talk',talks)
+  .then(function(talks){
+    console.log('created talks!');
+  })
 });
