@@ -108,9 +108,9 @@ message('All dependencies loaded!',chalk.cyan);
 // Get the url of a talk video from the oembed html
 var getOembedHref = function (oembed) {
   if (!oembed) return ''
-  var match = oembed.html.match(/(src|href)=\"(.+?)\"/i)
+  var match = oembed.html.match(/\s(src|href)=\"(.+?)\"/i)
   if (!match) return
-  return match[1]
+  return match[2]
 }
 
 
