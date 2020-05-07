@@ -14,6 +14,7 @@ https://eaglobal.effectivealtruism.org/* https://www.eaglobal.org/:splat 302!
 
 # Redirect errant links to where they're supposed to go
 /events/ea-global-2019-london /events/london2019/ 301
+/events/eagxberlin2020 /events/eagxvirtual2020 301
 
 # Optional: Redirect default Netlify subdomain to primary domain
 https://effective-altruism-global.netlify.com/* https://www.eaglobal.org/:splat 302!
