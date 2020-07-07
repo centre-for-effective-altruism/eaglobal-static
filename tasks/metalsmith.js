@@ -281,7 +281,7 @@ function build(buildCount){
       },
       'events': {
         pattern: 'events/**/index.html',
-        sortBy: function(a,b){
+        sortBy: function(a, b) {
           // handle missing start dates
           if (!a.startDate && !b.startDate) {
             // push EAGs over EAGXs
@@ -292,15 +292,15 @@ function build(buildCount){
           }
           if (!a.startDate && b.startDate) {
             // sort up relative to a past event
-            if(moment(b.startDate).isBefore(moment(),'day')) return 1;
+            if(moment(b.startDate).isBefore(moment(),'day')) return -1;
             // sort down relative to an upcoming event
-            if(moment(b.startDate).isSameOrAfter(moment(),'day')) return -1;
+            return 1;
           }
           if (a.startDate && !b.startDate) {
             // sort down relative to a past event
             if(moment(a.startDate).isBefore(moment(),'day')) return -1;
             // sort up relative to an upcoming event
-            if(moment(a.startDate).isSameOrAfter(moment(),'day')) return 1;
+            return 1;
           }
           // otherwise, sort by start date
           if (moment(a.startDate).isBefore(moment(b.startDate),'day')) return 1;
