@@ -11,7 +11,7 @@ const slug = require('slug'); slug.defaults.mode = 'rfc3986';
 const urlEmbed = require('url-embed');
 const EmbedEngine = urlEmbed.EmbedEngine;
 const Embed = urlEmbed.Embed;
- 
+
 const embedEngine = new EmbedEngine({
   timeoutMs: 5000,
 });
@@ -23,6 +23,11 @@ const contentful = new Contentful();
 
 const tick = chalk.green('✓');
 
+// see https://www.contentful.com/developers/docs/tutorials/general/determine-entry-asset-state/
+function isPublished(entity) {
+  return !!entity.sys.publishedVersion && entity.sys.version == entity.sys.publishedVersion + 1
+}
+
 console.log(chalk.inverse('Searching for Contentful entries with missing embed data...'));
 contentful.space(function(space){
     var entriesMissingData = [];
@@ -33,6 +38,8 @@ contentful.space(function(space){
     .then(function(entries){
         // get info about each entry
         entries.items.forEach(function(entry){
+            // skip /unpublised entries
+            if (!isPublished(entry)) return
             if ( entry.fields.embedUrl && (!entry.fields.thumbnail || !entry.fields.oembed) ) {
                 entriesMissingData.push(entry);
             }
