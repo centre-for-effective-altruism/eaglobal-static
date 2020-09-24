@@ -5,6 +5,7 @@
 /organize-eagx /eagx/organize 301
 /organise-eagx /eagx/organize 301
 /eagx/organise /eagx/organize 301
+/student-summit-reading-list /ea-conference-reading-list 301
 
 # Redirect domain aliases to primary domain
 https://effective.altruism.global/* https://www.eaglobal.org/:splat 302!
