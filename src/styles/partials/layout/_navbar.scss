@@ -30,9 +30,12 @@
 
 }
 .navbar-header-brand-logo-wrapper {
-  @media(max-width: $screen-xs-max){
+  @media(max-width: $screen-md){
       width: 240px;
       margin-top: 6px;
+  }
+  > a {
+    display: inline-block;
   }
 }
 
@@ -56,4 +59,5 @@
 }
 .navbar-header-brand-logo {
   width: 100%;
+  max-height: 50px;
 }
