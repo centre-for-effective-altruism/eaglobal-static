@@ -60,7 +60,7 @@
     "metalsmith-headings": "^0.1.0",
     "metalsmith-headings-identifier": "0.0.11",
     "metalsmith-html-minifier": "^2.0.0",
-    "metalsmith-icons": "^0.4.0",
+    "metalsmith-icons": "0.6.0",
     "metalsmith-ignore": "^0.1.2",
     "metalsmith-layouts": "^1.6.5",
     "metalsmith-lazysizes": "^0.3.2",
@@ -100,7 +100,6 @@
   },
   "devDependencies": {
     "cache-require-paths": "^0.2.0",
-    "livereload": "^0.5.0",
     "metalsmith-changed": "^2.0.0",
     "node-static": "^0.7.7",
     "time-require": "^0.1.2"
