@@ -37,7 +37,7 @@
     "chalk": "^1.1.3",
     "cheerio": "^0.20.0",
     "clean-css": "^3.4.18",
-    "contentful-content-management": "^0.1.2",
+    "contentful-content-management": "^0.2.0",
     "contentful-metalsmith": "^0.8.0",
     "dotenv": "^2.0.0",
     "embedly": "^2.1.0",

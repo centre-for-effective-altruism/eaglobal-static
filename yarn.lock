@@ -1096,16 +1096,17 @@ content-type@~1.0.4:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/content-type/-/content-type-1.0.4.tgz#e138cc75e040c727b1966fe5e5f8c9aee256fe3b"
 
-contentful-content-management@^0.1.2:
-  version "0.1.2"
-  resolved "https://registry.yarnpkg.com/contentful-content-management/-/contentful-content-management-0.1.2.tgz#125a9c0cd9ad72d6b237981f2d57cadfb110eaff"
+contentful-content-management@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/contentful-content-management/-/contentful-content-management-0.2.0.tgz#ec439c6c3e0cb4164ea91d49e48e17faa1dce6d2"
+  integrity sha512-baRFxCmt1NxRCRBPlZMp4R/Y3wRrxEly6JcncfpEtj16unjZPhAcJq3MyqYJz2OUFB/Zyv3k1TC5LmU+yYyuwQ==
   dependencies:
     bluebird "^3.4.1"
     bluebird-queue "0.0.8"
     contentful-management "^1.1.9"
     dotenv "^2.0.0"
     extend "^3.0.0"
-    progress "^1.1.8"
+    progress "^2.0.3"
     promise-retry "^1.1.1"
 
 contentful-management@^1.1.9:
@@ -4153,7 +4154,12 @@ process@~0.11.0:
   version "0.11.10"
   resolved "https://registry.yarnpkg.com/process/-/process-0.11.10.tgz#7332300e840161bda3e69a1d1d91a7d4bc16f182"
 
-progress@^1.1.8, progress@~1.1.8:
+progress@^2.0.3:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/progress/-/progress-2.0.3.tgz#7e8cf8d8f5b8f239c1bc68beb4eb78567d572ef8"
+  integrity sha512-7PiHtLll5LdnKIMw100I+8xJXR5gW2QwWYkT6iJva0bXitZKa/XMrSbdmg3r2Xnaidz9Qumd0VPaMrZlF9V9sA==
+
+progress@~1.1.8:
   version "1.1.8"
   resolved "https://registry.yarnpkg.com/progress/-/progress-1.1.8.tgz#e260c78f6161cdd9b0e56cc3e0a85de17c7a57be"
 
