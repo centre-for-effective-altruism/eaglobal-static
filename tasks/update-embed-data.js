@@ -93,7 +93,6 @@ contentful
             console.log(tick, "Got oEmbed data");
             // flatten responses array
             oembedData = embeds;
-            console.log(embeds);
           })
           .then(() => {
             // create new assets for each of the talks
