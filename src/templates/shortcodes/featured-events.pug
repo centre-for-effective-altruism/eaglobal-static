@@ -1,5 +1,6 @@
 - var featuredEvents = events.filter(event => event.featuredEvent).slice(0, 3)
 if featuredEvents && featuredEvents.length
+  - console.log(featuredEvents)
   - featuredEvents.sort((a,b) => a.startDate  > b.startDate)
   .row
     - var cardWrapperClasses = []
