@@ -1,6 +1,6 @@
 - var featuredEvents = events.filter(event => event.featuredEvent).slice(0, 3)
 if featuredEvents && featuredEvents.length
-  - featuredEvents.sort((a,b) => moment(a.startDate).isAfter(moment(b.startDate), 'day'))
+  - featuredEvents.sort((a,b) => moment(a.startDate).isAfter(moment(b.startDate), 'day') ? 1 : -1)
   .row
     - var cardWrapperClasses = []
     include ../components/cards
