@@ -88,7 +88,7 @@
     "rimraf": "^2.5.2",
     "slack-node": "^0.1.8",
     "slug": "^0.9.1",
-    "striptags": "^2.1.1",
+    "striptags": "^3.2.0",
     "throttle-debounce": "^1.0.1",
     "truncate": "^2.0.0",
     "typogr": "^0.6.6",
