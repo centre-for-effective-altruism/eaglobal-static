@@ -10,7 +10,7 @@
     "styles": "node ./tasks/styles.js",
     "embeds": "node ./tasks/update-embed-data.js",
     "eagxroles": "node ./tasks/create-eagx-roles.js",
-    "build": "npm run styles && npm run scripts && npm run embeds && npm run eagxroles && npm run metalsmith",
+    "build": "yarn global add phantomjs-prebuilt && npm run styles && npm run scripts && npm run embeds && npm run eagxroles && npm run metalsmith",
     "start": "npm run styles && npm run scripts && node ./tasks/server.js",
     "development": "NODE_ENV=development npm run build",
     "staging": "NODE_ENV=staging npm run build",
