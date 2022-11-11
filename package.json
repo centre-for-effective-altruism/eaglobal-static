@@ -46,7 +46,7 @@
     "iframe-resizer": "^3.5.5",
     "jquery": "^3.0.0",
     "lazysizes": "^2.0.0",
-    "markdown-it": "^7.0.0",
+    "markdown-it": "^12.3.2",
     "markdown-it-attrs": "^0.7.0",
     "markdown-it-footnote": "^2.0.0",
     "merge": "^1.2.0",
