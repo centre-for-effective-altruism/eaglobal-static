@@ -81,7 +81,7 @@
     "node-notifier": "^4.6.0",
     "node-sass": "^4.14.1",
     "numeral": "^1.5.3",
-    "pug": "^2.0.0-beta4",
+    "pug": "^3.0.1",
     "pugify": "^1.0.5",
     "purify-css": "^1.1.9",
     "recursive-readdir": "^2.0.0",
